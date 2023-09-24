@@ -9,7 +9,7 @@ async function Page() {
     <div className="flex flex-col gap-5">
       {tests
         ? tests.map((test) => (
-            <Link href={`/test/${test.id}`}>
+            <Link key={test.id} href={`/test/${test.id}`}>
               <Button>{test.topic}</Button>
             </Link>
           ))
