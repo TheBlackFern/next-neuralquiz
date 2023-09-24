@@ -31,3 +31,5 @@ export async function fetchQuestions(testID: number) {
     .where(eq(tests.id, testID));
   return allQuestionsForTest;
 }
+
+export type TQuestions = Awaited<ReturnType<typeof fetchQuestions>>;

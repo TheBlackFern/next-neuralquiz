@@ -34,7 +34,11 @@ export default function RootLayout({
         sizes="16x16"
         href="/images/favicon-16x16.png"
       />
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        <main className="flex w-full min-h-screen flex-col items-center justify-between p-24">
+          {children}
+        </main>
+      </body>
     </html>
   );
 }
