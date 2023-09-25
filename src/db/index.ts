@@ -12,7 +12,7 @@ export async function fetchTests() {
   return allTests;
 }
 
-export async function fetchQuestions(testID: number) {
+export async function fetchQuestionsByTestID(testID: number) {
   const allQuestionsForTest = await db
     .select({
       id: questions.id,
@@ -20,16 +20,17 @@ export async function fetchQuestions(testID: number) {
       answer: questions.answer,
       options: questions.options,
       image: questions.image,
-      test: {
-        id: tests.id,
-        topic: tests.topic,
-        description: tests.description,
-      },
+      test: questions.test,
+      // test: {
+      //   id: tests.id,
+      //   topic: tests.topic,
+      //   description: tests.description,
+      // },
     })
     .from(questions)
-    .leftJoin(tests, eq(questions.test, tests.id))
-    .where(eq(tests.id, testID));
+    // .leftJoin(tests, eq(questions.test, tests.id))
+    .where(eq(questions.test, testID));
   return allQuestionsForTest;
 }
 
-export type TQuestions = Awaited<ReturnType<typeof fetchQuestions>>;
+export type TQuestions = Awaited<ReturnType<typeof fetchQuestionsByTestID>>;
