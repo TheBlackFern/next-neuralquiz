@@ -1,6 +1,9 @@
 import "./globals.css";
 import type { Metadata } from "next";
+import { ThemeProvider } from "next-themes";
 import { Inter } from "next/font/google";
+import Nav from "@/components/nav";
+import { Providers } from "./providers";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -35,9 +38,12 @@ export default function RootLayout({
         href="/images/favicon-16x16.png"
       />
       <body className={inter.className}>
-        <main className="flex w-full min-h-screen flex-col items-center justify-between p-24">
-          {children}
-        </main>
+        <Providers>
+          <Nav />
+          <main className="flex w-full min-h-screen flex-col items-center justify-between p-24">
+            {children}
+          </main>
+        </Providers>
       </body>
     </html>
   );

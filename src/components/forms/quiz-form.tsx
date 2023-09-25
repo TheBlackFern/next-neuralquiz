@@ -44,10 +44,10 @@ const QuizForm = ({ questions }: QuizFormProps) => {
             }
           )}
           animate={{
-            translateX: `${-(step - index) * 600}px`,
+            translateX: `${-(step - index) * 650}px`,
           }}
           style={{
-            translateX: `${-(step - index) * 600}px`,
+            translateX: `${-(step - index) * 650}px`,
           }}
           transition={{
             ease: "easeInOut",
