@@ -1,8 +1,4 @@
-import { Question } from "@/db/schema";
-import Image from "next/image";
-import { Button } from "../ui/button";
-import { cn } from "@/lib/utils";
-import { TChoice } from "./quiz-form";
+import { Dispatch, SetStateAction } from "react";
 import {
   Card,
   CardContent,
@@ -11,9 +7,14 @@ import {
   CardHeader,
   CardTitle,
 } from "../ui/card";
-import { Dispatch, Fragment, SetStateAction } from "react";
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 import { Label } from "../ui/label";
+import Image from "next/image";
+import { Button } from "../ui/button";
+
+import { cn } from "@/lib/utils";
+import { Question } from "@/db/schema";
+import { TChoice } from "./quiz-form";
 
 type QuizFormQuestionProps = {
   question: Question;
@@ -64,13 +65,13 @@ const QuizFormQuestion = ({
                 <Label
                   htmlFor={`r${optionIndex}`}
                   className={cn(
-                    " font-normal text-sm w-full",
-                    choice?.choice === option && {
-                      "text-green-500 hover:text-green-500/90":
-                        choice?.isCorrect === true,
-                      "text-red-500 hover:text-red-500/90":
-                        choice?.isCorrect === false,
-                    }
+                    " font-normal text-sm w-full"
+                    // choice?.choice === option && {
+                    //   "text-green-500 hover:text-green-500/90":
+                    //     choice?.isCorrect === true,
+                    //   "text-red-500 hover:text-red-500/90":
+                    //     choice?.isCorrect === false,
+                    // }
                   )}
                 >
                   {option}

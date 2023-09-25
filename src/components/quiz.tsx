@@ -1,8 +1,9 @@
 "use client";
 
-import { TQuestions } from "@/db";
 import QuizForm from "./forms/quiz-form";
 import { LazyMotion, domAnimation } from "framer-motion";
+
+import { TQuestions } from "@/db";
 
 type QuizProps = {
   questions: TQuestions;
