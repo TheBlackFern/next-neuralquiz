@@ -9,7 +9,7 @@ type QuizFormProps = {
 };
 
 export type TChoice = {
-  choice: number;
+  choice: string;
   isCorrect: boolean;
 };
 
@@ -19,16 +19,11 @@ const QuizForm = ({ questions }: QuizFormProps) => {
   );
   const [step, setStep] = useState(0);
 
-  const handleChoice = (
-    option: string,
-    optionIndex: number,
-    answer: string,
-    index: number
-  ) => {
+  const handleChoice = (option: string, answer: string, index: number) => {
     setChoices((prev) => {
       const upd = [...prev];
       upd[index] = {
-        choice: optionIndex,
+        choice: option,
         isCorrect: option === answer,
       };
       return upd;

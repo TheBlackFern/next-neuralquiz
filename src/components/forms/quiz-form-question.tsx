@@ -11,18 +11,15 @@ import {
   CardHeader,
   CardTitle,
 } from "../ui/card";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, Fragment, SetStateAction } from "react";
+import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
+import { Label } from "../ui/label";
 
 type QuizFormQuestionProps = {
   question: Question;
   step: number;
   setStep: Dispatch<SetStateAction<number>>;
-  handleChoice: (
-    option: string,
-    optionIndex: number,
-    answer: string,
-    index: number
-  ) => void;
+  handleChoice: (option: string, answer: string, index: number) => void;
   choice?: TChoice;
 };
 
@@ -45,40 +42,42 @@ const QuizFormQuestion = ({
           <CardTitle>Question {step + 1}</CardTitle>
           <CardDescription>{question.question}</CardDescription>
           {question.image && (
-            // <div className="w-[200px] h-[200px] md:hidden">
             <Image
               src={question.image}
-              width={250}
-              height={250}
-              className="w-[250px] h-[250px] md:hidden self-center"
+              width={200}
+              height={200}
+              className="w-[200px] h-[200px] md:hidden self-center"
               alt="question image"
             />
-            // </div>
           )}
         </CardHeader>
 
         <CardContent className="w-full flex flex-col gap-2">
-          <div className="w-24 flex flex-col items-center justify-center gap-1.5">
+          <RadioGroup
+            onValueChange={(value) => {
+              handleChoice(value, question.answer, step);
+            }}
+          >
             {question.options.map((option, optionIndex) => (
-              <Button
-                key={optionIndex}
-                className={cn(
-                  "font-medium w-full",
-                  choice?.choice === optionIndex && {
-                    "bg-green-500 hover:bg-green-500/90":
-                      choice?.isCorrect === true,
-                    "bg-red-500 hover:bg-red-500/90":
-                      choice?.isCorrect === false,
-                  }
-                )}
-                onClick={() =>
-                  handleChoice(option, optionIndex, question.answer, step)
-                }
-              >
-                {option}
-              </Button>
+              <div className="flex items-center gap-2" key={optionIndex}>
+                <RadioGroupItem value={option} id={`r${optionIndex}`} />
+                <Label
+                  htmlFor={`r${optionIndex}`}
+                  className={cn(
+                    " font-normal text-sm w-full",
+                    choice?.choice === option && {
+                      "text-green-500 hover:text-green-500/90":
+                        choice?.isCorrect === true,
+                      "text-red-500 hover:text-red-500/90":
+                        choice?.isCorrect === false,
+                    }
+                  )}
+                >
+                  {option}
+                </Label>
+              </div>
             ))}
-          </div>
+          </RadioGroup>
         </CardContent>
         <CardFooter className="flex justify-between">
           <Button onClick={() => setStep((prev) => prev + 1)} className="w-16">
