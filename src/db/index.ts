@@ -1,3 +1,4 @@
+"use server";
 import { Pool } from "pg";
 import { drizzle } from "drizzle-orm/node-postgres";
 import { eq } from "drizzle-orm";
@@ -6,7 +7,7 @@ import { questions, tests } from "./schema";
 const connectionString = process.env.DATABASE_URL!;
 const pool = new Pool({ connectionString });
 // const client = postgres(connectionString);
-export const db = drizzle(pool);
+const db = drizzle(pool);
 
 // export async function fetchTests(req, ctx) {
 //   const pool = new Pool({ connectionString: process.env.DATABASE_URL });
