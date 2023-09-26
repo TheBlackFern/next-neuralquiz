@@ -1,3 +1,4 @@
+"use server";
 import { integer, pgTable, serial, text } from "drizzle-orm/pg-core";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 

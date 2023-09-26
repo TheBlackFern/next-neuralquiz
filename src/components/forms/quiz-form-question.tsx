@@ -34,8 +34,8 @@ const QuizFormQuestion = ({
   return (
     <Card
       className={cn(
-        "w-[300px] h-auto flex justify-center items-center flex-row",
-        question.image && "md:w-[600px]",
+        "w-auto h-auto flex justify-center items-center flex-row",
+        question.image && "md:w-[600px]"
       )}
     >
       <div>
@@ -65,7 +65,7 @@ const QuizFormQuestion = ({
                 <Label
                   htmlFor={`r${optionIndex}`}
                   className={cn(
-                    " font-normal text-sm w-full",
+                    " font-normal text-sm w-full"
                     // choice?.choice === option && {
                     //   "text-green-500 hover:text-green-500/90":
                     //     choice?.isCorrect === true,
