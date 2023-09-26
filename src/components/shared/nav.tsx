@@ -1,5 +1,5 @@
 import { BrainCircuit } from "lucide-react";
-import { ThemeToggle } from "./theme/theme-toggle";
+import { ThemeToggle } from "../theme/theme-toggle";
 
 const Nav = () => {
   return (

@@ -1,9 +1,9 @@
 import "./globals.css";
 import type { Metadata } from "next";
-import { ThemeProvider } from "next-themes";
 import { Inter } from "next/font/google";
-import Nav from "@/components/nav";
+import Nav from "@/components/shared/nav";
 import { Providers } from "./providers";
+import Background from "@/components/shared/background";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -40,8 +40,10 @@ export default function RootLayout({
       <body className={inter.className}>
         <Providers>
           <Nav />
-          <main className="flex w-full min-h-screen flex-col items-center justify-between p-24">
+
+          <main className="relative min-h-screen flex w-full flex-col items-center justify-between p-5 pt-24 sm:p-24">
             {children}
+            <Background />
           </main>
         </Providers>
       </body>

@@ -1,19 +1,21 @@
-import { Button } from "@/components/ui/button";
+import QuizLink from "@/components/quiz/quiz-link";
 import { fetchTests } from "@/db";
-import Link from "next/link";
 
 async function Page() {
   const tests = await fetchTests();
 
   return (
-    <div className="flex flex-col gap-5">
-      {tests
-        ? tests.map((test) => (
-            <Link key={test.id} href={`/test/${test.id}`}>
-              <Button>{test.topic}</Button>
-            </Link>
-          ))
-        : null}
+    <div className="flex flex-col gap-5 items-center">
+      <h1 className="text-3xl text-center font-bold">Test Away!</h1>
+      <p className="text-lg text-muted-foreground mb-5 text-center [text-wrap:balance]">
+        Select a quiz you want to take and try your best to answer all
+        questions.
+      </p>
+      {tests ? (
+        tests.map((test) => <QuizLink test={test} />)
+      ) : (
+        <p className="font-medium">No tests found!</p>
+      )}
     </div>
   );
 }

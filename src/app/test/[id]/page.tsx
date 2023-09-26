@@ -1,8 +1,8 @@
 import { Button } from "@/components/ui/button";
 
 import Link from "next/link";
-import Quiz from "@/components/forms/quiz";
-``;
+import Quiz from "@/components/quiz/quiz";
+
 type PageProps = {
   params: {
     id: string;
