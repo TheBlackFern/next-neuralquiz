@@ -1,5 +1,5 @@
 import { integer, pgTable, serial, text } from "drizzle-orm/pg-core";
-import { createInsertSchema, createSelectSchema } from "drizzle-zod";
+// import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 
 export const tests = pgTable("tests", {
   id: serial("id").primaryKey(),
@@ -27,8 +27,8 @@ export const questions = pgTable("questions", {
 //   }),
 // }));
 
-export const insertTestSchema = createInsertSchema(tests);
-export const insertQuestionSchema = createInsertSchema(questions);
+// export const insertTestSchema = createInsertSchema(tests);
+// export const insertQuestionSchema = createInsertSchema(questions);
 
 export type Test = typeof tests.$inferSelect;
 export type NewTest = typeof tests.$inferInsert;
