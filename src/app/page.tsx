@@ -12,7 +12,7 @@ async function Page() {
         questions.
       </p>
       {tests ? (
-        tests.map((test) => <QuizLink test={test} />)
+        tests.map((test) => <QuizLink key={test.id} test={test} />)
       ) : (
         <p className="font-medium">No tests found!</p>
       )}

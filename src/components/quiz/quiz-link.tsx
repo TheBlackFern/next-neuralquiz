@@ -10,7 +10,7 @@ type QuizLinkProps = {
 
 const QuizLink = ({ test }: QuizLinkProps) => {
   return (
-    <Link key={test.id} href={`/test/${test.id}`}>
+    <Link href={`/test/${test.id}`}>
       <Button
         variant={"secondary"}
         className="group flex flex-row gap-3 h-auto justify-start px-5 py-3"
