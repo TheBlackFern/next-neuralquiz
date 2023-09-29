@@ -23,7 +23,7 @@ async function Page() {
           Quiz Me!
         </Link>
         <Link
-          href="/tests"
+          href="/create"
           className={cn(
             buttonVariants({ variant: "outline" }),
             "w-32 gap-1 px-2.5 py-1.5 h-12"
