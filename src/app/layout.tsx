@@ -4,6 +4,7 @@ import { Inter } from "next/font/google";
 import Nav from "@/components/shared/nav";
 import { Providers } from "./providers";
 import Background from "@/components/shared/background";
+import { cn } from "@/lib/utils";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -37,7 +38,7 @@ export default function RootLayout({
         sizes="16x16"
         href="/images/favicon-16x16.png"
       />
-      <body className={inter.className}>
+      <body className={cn("antialised", inter.className)}>
         <Providers>
           <Nav />
 

@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { m } from "framer-motion";
 import { cn } from "@/lib/utils";
-import { Button } from "../ui/button";
+import { Button, buttonVariants } from "../ui/button";
 import QuizFormQuestion from "./quiz-form-question";
 import QuizFormResults from "./quiz-form-results";
 
 import { TQuestions } from "@/db";
+import Link from "next/link";
 
 type QuizFormProps = {
   questions: TQuestions;
@@ -86,7 +87,12 @@ const QuizForm = ({ questions }: QuizFormProps) => {
           <Button variant="outline" onClick={() => setStep(0)}>
             Retake
           </Button>
-          <Button>New Test</Button>
+          <Link
+            href="/tests"
+            className={cn(buttonVariants({ variant: "default" }))}
+          >
+            New Test
+          </Link>
         </QuizFormResults>
       </m.div>
     </div>
