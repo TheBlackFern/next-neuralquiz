@@ -75,7 +75,7 @@ export function TestForm() {
                   <Textarea
                     rows={3}
                     className="h-24"
-                    placeholder="You will be tested in physics."
+                    placeholder="You will be tested on your physics knowledge."
                     {...field}
                   />
                 </FormControl>

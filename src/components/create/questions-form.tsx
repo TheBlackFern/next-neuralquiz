@@ -18,6 +18,9 @@ import { Input } from "@/components/ui/input";
 import { useFieldArray, useForm } from "react-hook-form";
 
 import { OptionsInput } from "./options-input";
+import { X } from "lucide-react";
+import { m } from "framer-motion";
+import { cn } from "@/lib/utils";
 
 // TODO: check if answer in options
 const questionsSchema = z.object({
@@ -72,6 +75,11 @@ export function QuestionsForm() {
     form.reset(values);
   }
 
+  function removeQuestion(indexToRemove: number) {
+    setOptions(options.filter((_, index) => index !== indexToRemove));
+    remove(indexToRemove);
+  }
+
   return (
     <Form {...form}>
       <form
@@ -80,7 +88,18 @@ export function QuestionsForm() {
       >
         <div className="grid grid-flow-row min-[800px]:grid-cols-2 min-[1100px]:grid-cols-3 min-[1400px]:grid-cols-4 gap-3">
           {fields.map((field, index) => (
-            <div key={index} className="border h-auto space-y-1 p-3 w-[300px]">
+            <m.div
+              key={index}
+              className="relative border h-auto space-y-1 p-3 w-[300px]"
+            >
+              <Button
+                type="button"
+                variant="ghost"
+                onClick={() => removeQuestion(index)}
+                className={"absolute top-1 h-7 w-7 right-0 p-0"}
+              >
+                <X size={20} />
+              </Button>
               <FormField
                 control={form.control}
                 key={`${field.id}-question`}
@@ -122,6 +141,10 @@ export function QuestionsForm() {
                     <FormControl>
                       <Input placeholder="Type in an image URL..." {...field} />
                     </FormControl>
+
+                    {/* <FormControl>
+                      <Input placeholder="Type in an image URL..." {...field} />
+                    </FormControl> */}
                     <FormMessage />
                   </FormItem>
                 )}
@@ -157,9 +180,12 @@ export function QuestionsForm() {
                   </FormItem>
                 )}
               />
-            </div>
+            </m.div>
           ))}
         </div>
+        <span className="text-destructive">
+          🚧 Image upload is a Work in Progress, coming soon... 🚧
+        </span>
         <div className="flex justify-between">
           <Button
             type="button"
