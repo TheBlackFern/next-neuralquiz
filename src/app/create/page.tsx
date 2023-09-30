@@ -1,5 +1,5 @@
 import React from "react";
-import { TestForm } from "@/components/create/create-form";
+import { TestForm } from "@/components/create/test-form";
 
 const Page = () => {
   return (

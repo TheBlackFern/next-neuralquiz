@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 
@@ -15,42 +16,47 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useFieldArray, useForm } from "react-hook-form";
-import { Textarea } from "../ui/textarea";
-import { useState } from "react";
+
+import { OptionsInput } from "./options-input";
 
 // TODO: check if answer in options
 const questionsSchema = z.object({
-  questions: z.array(
-    z.object({
-      question: z
-        .string()
-        .min(2, { message: "Topic should be at least 2 characters long." })
-        .max(50, { message: "Topic is too long." }),
-      answer: z
-        .string()
-        .min(2, { message: "Answer should be at least 2 characters long." })
-        .max(100, { message: "Answer is too long." }),
-      options: z.array(z.string()),
-      image: z.string().url().optional(),
-    })
-  ),
+  questions: z
+    .array(
+      z.object({
+        question: z
+          .string()
+          .min(2, { message: "Topic should be at least 2 characters long." })
+          .max(50, { message: "Topic is too long." }),
+        answer: z
+          .string()
+          .min(1, { message: "Answer should be at least 1 character long." })
+          .max(100, { message: "Answer is too long." }),
+        image: z.string().url().optional(),
+        options: z
+          .array(z.string())
+          .min(2, { message: "There should be at least 2 option." }),
+      })
+    )
+    .min(1, { message: "The test should have at least one question." }),
 });
 
 const questionsInitial: FormQuestion[] = [
-  { question: "What is 2 + 2?", answer: "4", options: ["3", "4", "5"] },
+  {
+    question: "What is 2 + 2?",
+    answer: "4",
+    options: ["3", "4", "5"],
+  },
 ];
 
 type FormQuestion = z.infer<typeof questionsSchema>["questions"][number];
 
-export function TestForm() {
-  const [questions, setQuestions] = useState<FormQuestion[]>(
-    () => questionsInitial
-  );
-
+export function QuestionsForm() {
+  const [options, setOptions] = React.useState<string[][]>([["3", "4", "5"]]);
   const form = useForm<z.infer<typeof questionsSchema>>({
     resolver: zodResolver(questionsSchema),
     defaultValues: {
-      questions: [],
+      questions: questionsInitial,
     },
   });
 
@@ -62,7 +68,6 @@ export function TestForm() {
   const isSubmittable = form.formState.isDirty && form.formState.isValid;
 
   function onSubmit(values: z.infer<typeof questionsSchema>) {
-    setQuestions(values.questions);
     console.log(values);
     form.reset(values);
   }
@@ -71,21 +76,108 @@ export function TestForm() {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="space-y-8 w-[300px]"
+        className="space-y-1 min-w-[300px]"
       >
-        {fields.map((field, index) => {
-          const errorForField = form.formState.errors?.questions?.[index];
-          return (
-            <>
-              <p>hi</p>
-              <p>{errorForField?.answer?.message}</p>
-            </>
-          );
-        })}
-
-        <Button disabled={!isSubmittable} type="submit">
-          Submit
-        </Button>
+        <div className="grid grid-flow-row min-[800px]:grid-cols-2 min-[1100px]:grid-cols-3 min-[1400px]:grid-cols-4 gap-3">
+          {fields.map((field, index) => (
+            <div key={index} className="border h-auto space-y-1 p-3 w-[300px]">
+              <FormField
+                control={form.control}
+                key={`${field.id}-question`}
+                name={`questions.${index}.question`}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Question*</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Type in the question..." {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                key={`${field.id}-answer`}
+                name={`questions.${index}.answer`}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Answer*</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Type in the correct answer..."
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                key={`${field.id}-image`}
+                name={`questions.${index}.image`}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Image</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Type in an image URL..." {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                key={`${field.id}-options`}
+                name={`questions.${index}.options`}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Options*</FormLabel>
+                    {/* <FormDescription className={cn(index !== 0 && "sr-only")}>
+                      
+                    </FormDescription> */}
+                    <FormControl>
+                      <OptionsInput
+                        {...field}
+                        placeholder="Type in a new option..."
+                        options={options}
+                        index={index}
+                        setOptions={(newOptions) => {
+                          console.log(newOptions);
+                          setOptions(newOptions);
+                          form.setValue(
+                            `questions.${index}.options`,
+                            newOptions[index] as [string, ...string[]]
+                          );
+                          return setOptions;
+                        }}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+          ))}
+        </div>
+        <div className="flex justify-between">
+          <Button
+            type="button"
+            variant="outline"
+            className=""
+            onClick={() => {
+              setOptions((prev) => [...prev, []]);
+              append({
+                question: "",
+                answer: "",
+                options: [],
+              });
+            }}
+          >
+            Add Question
+          </Button>
+          <Button type="submit">Create Quiz</Button>
+        </div>
       </form>
     </Form>
   );
