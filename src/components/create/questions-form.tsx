@@ -21,6 +21,8 @@ import { OptionsInput } from "./options-input";
 import { X } from "lucide-react";
 import { m } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { NewTest } from "@/db/schema";
+import { createTestWithQuestions } from "@/db";
 
 // TODO: check if answer in options
 const questionsSchema = z.object({
@@ -54,7 +56,14 @@ const questionsInitial: FormQuestion[] = [
 
 type FormQuestion = z.infer<typeof questionsSchema>["questions"][number];
 
-export function QuestionsForm() {
+export function QuestionsForm({
+  test,
+}: {
+  test: {
+    topic: string;
+    description?: string | undefined;
+  };
+}) {
   const [options, setOptions] = React.useState<string[][]>([["3", "4", "5"]]);
   const form = useForm<z.infer<typeof questionsSchema>>({
     resolver: zodResolver(questionsSchema),
@@ -70,9 +79,9 @@ export function QuestionsForm() {
 
   const isSubmittable = form.formState.isDirty && form.formState.isValid;
 
-  function onSubmit(values: z.infer<typeof questionsSchema>) {
-    console.log(values);
-    form.reset(values);
+  async function onSubmit(values: z.infer<typeof questionsSchema>) {
+    await createTestWithQuestions(values.questions, test);
+    form.reset();
   }
 
   function removeQuestion(indexToRemove: number) {

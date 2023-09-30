@@ -1,5 +1,5 @@
 "use client";
-
+import React from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 
@@ -18,6 +18,7 @@ import { useForm } from "react-hook-form";
 import { Textarea } from "../ui/textarea";
 import { useState } from "react";
 import { QuestionsForm } from "./questions-form";
+import { NewTest } from "@/db/schema";
 
 const testSchema = z.object({
   topic: z
@@ -29,6 +30,9 @@ const testSchema = z.object({
 
 export function TestForm() {
   const [showQuestionsForm, setShowQuestionsForm] = useState(false);
+  const [test, setTest] = React.useState<z.infer<typeof testSchema> | null>(
+    null
+  );
   const form = useForm<z.infer<typeof testSchema>>({
     resolver: zodResolver(testSchema),
     defaultValues: {
@@ -39,7 +43,7 @@ export function TestForm() {
 
   function onSubmit(values: z.infer<typeof testSchema>) {
     setShowQuestionsForm(true);
-    console.log(values);
+    setTest(values);
   }
 
   return (
@@ -89,7 +93,7 @@ export function TestForm() {
           {!showQuestionsForm && <Button type="submit">Add questions</Button>}
         </form>
       </Form>
-      {showQuestionsForm && <QuestionsForm />}
+      {showQuestionsForm && <QuestionsForm test={test!} />}
     </>
   );
 }
