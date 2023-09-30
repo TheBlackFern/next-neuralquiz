@@ -1,9 +1,10 @@
 import "./globals.css";
 import type { Metadata } from "next";
-import { ThemeProvider } from "next-themes";
 import { Inter } from "next/font/google";
-import Nav from "@/components/nav";
+import Nav from "@/components/shared/nav";
 import { Providers } from "./providers";
+import Background from "@/components/shared/background";
+import { cn } from "@/lib/utils";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -37,11 +38,13 @@ export default function RootLayout({
         sizes="16x16"
         href="/images/favicon-16x16.png"
       />
-      <body className={inter.className}>
+      <body className={cn("antialised", inter.className)}>
         <Providers>
           <Nav />
-          <main className="flex w-full min-h-screen flex-col items-center justify-between p-24">
+
+          <main className="relative min-h-screen flex w-full flex-col items-center justify-between p-5 pt-24 sm:p-24">
             {children}
+            <Background />
           </main>
         </Providers>
       </body>

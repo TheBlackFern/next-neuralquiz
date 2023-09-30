@@ -2,7 +2,7 @@
 import { Pool } from "pg";
 import { drizzle } from "drizzle-orm/node-postgres";
 import { eq } from "drizzle-orm";
-import { questions, tests } from "./schema";
+import { NewQuestion, NewTest, questions, tests } from "./schema";
 
 const connectionString = process.env.DATABASE_URL!;
 const pool = new Pool({ connectionString });
@@ -44,3 +44,17 @@ export async function fetchQuestionsByTestID(testID: number) {
 }
 
 export type TQuestions = Awaited<ReturnType<typeof fetchQuestionsByTestID>>;
+
+export async function createTestWithQuestions(
+  newQuestions: Omit<NewQuestion, "test">[],
+  newTest: NewTest
+) {
+  await db.transaction(async (tx) => {
+    const insertedTest = await tx.insert(tests).values(newTest).returning();
+    const newQuestionsWithTest = newQuestions.map((question) => ({
+      ...question,
+      test: insertedTest[0].id,
+    }));
+    await tx.insert(questions).values(newQuestionsWithTest);
+  });
+}
