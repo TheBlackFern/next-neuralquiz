@@ -95,11 +95,11 @@ export function QuestionsForm({
         onSubmit={form.handleSubmit(onSubmit)}
         className="space-y-1 min-w-[300px]"
       >
-        <div className="grid grid-flow-row min-[800px]:grid-cols-2 min-[1100px]:grid-cols-3 min-[1400px]:grid-cols-4 gap-3">
+        <div className="grid grid-flow-row min-[960px]:grid-cols-2 min-[1400px]:grid-cols-3 gap-3 place-content-center auto-cols-fr">
           {fields.map((field, index) => (
             <m.div
               key={index}
-              className="relative border h-auto space-y-1 p-3 w-[300px]"
+              className="relative border h-auto space-y-1 p-3 w-full"
             >
               <Button
                 type="button"
@@ -192,9 +192,9 @@ export function QuestionsForm({
             </m.div>
           ))}
         </div>
-        <span className="text-destructive">
+        <p className="text-destructive text-center">
           🚧 Image upload is a Work in Progress, coming soon... 🚧
-        </span>
+        </p>
         <div className="flex justify-between">
           <Button
             type="button"
