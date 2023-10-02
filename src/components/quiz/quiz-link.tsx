@@ -1,9 +1,9 @@
-import { Test } from "@/db/schema";
-import Link from "next/link";
 import React from "react";
-import { Button, buttonVariants } from "../ui/button";
-import { ArrowRight, ChevronsRight } from "lucide-react";
+import Link from "next/link";
+import { buttonVariants } from "../ui/button";
+import { ChevronsRight } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Test } from "@/db/schema";
 
 type QuizLinkProps = {
   test: Test;

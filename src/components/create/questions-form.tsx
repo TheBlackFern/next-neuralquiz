@@ -8,7 +8,6 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -20,8 +19,6 @@ import { useFieldArray, useForm } from "react-hook-form";
 import { OptionsInput } from "./options-input";
 import { X } from "lucide-react";
 import { m } from "framer-motion";
-import { cn } from "@/lib/utils";
-import { NewTest } from "@/db/schema";
 import { createTestWithQuestions } from "@/db";
 
 // TODO: check if answer in options

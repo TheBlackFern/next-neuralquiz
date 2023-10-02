@@ -1,6 +1,5 @@
 import QuizLink from "@/components/quiz/quiz-link";
 import { fetchTests } from "@/db";
-import React from "react";
 
 const Page = async () => {
   const tests = await fetchTests();

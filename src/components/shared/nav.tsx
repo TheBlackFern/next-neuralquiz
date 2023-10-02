@@ -1,7 +1,7 @@
-import { BrainCircuit } from "lucide-react";
-import { ThemeToggle } from "../theme/theme-toggle";
 import Link from "next/link";
+import { ThemeToggle } from "../theme/theme-toggle";
 import { buttonVariants } from "../ui/button";
+import { BrainCircuit } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const Nav = () => {

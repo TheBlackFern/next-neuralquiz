@@ -1,7 +1,6 @@
-import { Button, buttonVariants } from "@/components/ui/button";
-
 import Link from "next/link";
 import Quiz from "@/components/quiz/quiz";
+import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 type PageProps = {

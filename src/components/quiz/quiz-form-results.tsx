@@ -26,7 +26,6 @@ const QuizFormResults = ({ score, total, children }: QuizFormResultsProps) => {
     <Card className="w-[250px] flex flex-col text-center items-center">
       <CardHeader>
         <CardTitle>Results</CardTitle>
-        {/* TODO: analyse the results */}
         <CardDescription>{ratingPhrase(score / total)}</CardDescription>
       </CardHeader>
       <CardContent>

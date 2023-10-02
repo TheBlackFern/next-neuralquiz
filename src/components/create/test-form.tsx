@@ -13,12 +13,10 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { useForm } from "react-hook-form";
 import { Textarea } from "../ui/textarea";
-import { useState } from "react";
+import { Input } from "@/components/ui/input";
 import { QuestionsForm } from "./questions-form";
-import { NewTest } from "@/db/schema";
+import { useForm } from "react-hook-form";
 
 const testSchema = z.object({
   topic: z
@@ -29,7 +27,7 @@ const testSchema = z.object({
 });
 
 export function TestForm() {
-  const [showQuestionsForm, setShowQuestionsForm] = useState(false);
+  const [showQuestionsForm, setShowQuestionsForm] = React.useState(false);
   const [test, setTest] = React.useState<z.infer<typeof testSchema> | null>(
     null
   );

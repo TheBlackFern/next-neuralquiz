@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction } from "react";
+import Image from "next/image";
 import {
   Card,
   CardContent,
@@ -9,17 +9,16 @@ import {
 } from "../ui/card";
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 import { Label } from "../ui/label";
-import Image from "next/image";
 import { Button } from "../ui/button";
+import { TChoice } from "./quiz-form";
 
 import { cn } from "@/lib/utils";
 import { Question } from "@/db/schema";
-import { TChoice } from "./quiz-form";
 
 type QuizFormQuestionProps = {
   question: Question;
   step: number;
-  setStep: Dispatch<SetStateAction<number>>;
+  setStep: React.Dispatch<React.SetStateAction<number>>;
   handleChoice: (option: string, answer: string, index: number) => void;
   choice?: TChoice;
 };
@@ -34,7 +33,7 @@ const QuizFormQuestion = ({
   return (
     <Card
       className={cn(
-        "w-auto h-auto flex justify-center items-center flex-row",
+        "w-[300px] h-auto flex justify-start items-center flex-row",
         question.image && "md:w-[600px]"
       )}
     >
