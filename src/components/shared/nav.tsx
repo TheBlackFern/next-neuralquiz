@@ -1,7 +1,7 @@
-import { BrainCircuit } from "lucide-react";
-import { ThemeToggle } from "../theme/theme-toggle";
 import Link from "next/link";
+import { ThemeToggle } from "../theme/theme-toggle";
 import { buttonVariants } from "../ui/button";
+import { BrainCircuit } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const Nav = () => {
@@ -14,10 +14,10 @@ const Nav = () => {
           "flex flex-row justify-center items-center gap-1"
         )}
       >
-        <BrainCircuit size={24} color="orange" />
-        <span className="max-xs:hidden font-thin tracking-[0.2em] text-lg">
-          NeuralQuiz
-        </span>
+        <BrainCircuit size={24} color="hsl(var(--primary))" />
+        <p className="max-xs:hidden font-bold tracking-[-5%] text-[22px]/[30px]">
+          neural<span className="text-primary">quiz</span>
+        </p>
       </Link>
       <ThemeToggle className="ml-auto" />
     </nav>

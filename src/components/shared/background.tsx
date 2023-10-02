@@ -1,7 +1,10 @@
 const Background = () => {
   return (
     <>
-      <div className="absolute z-[-1] blur-3xl left-1/2 -translate-x-1/2 top-[calc(40px+10%)] rotate-[30deg]">
+      <div
+        aria-hidden="true"
+        className="absolute z-[-1] blur-3xl left-1/2 -translate-x-1/2 top-[calc(40px+10%)] rotate-[30deg]"
+      >
         <div
           className="aspect-[1155/678] w-[50vw] max-w-[500px] bg-gradient-to-tr from-orange-400 to-red-800 dark:invert opacity-30 sm:left-0"
           style={{
@@ -10,7 +13,7 @@ const Background = () => {
           }}
         />
       </div>
-      {/* <div className="absolute z-[-1] blur-3xl left-[10%] top-1/2 rotate-[50deg]">
+      {/* <div aria-hidden="true" className="absolute z-[-1] blur-3xl left-[10%] top-1/2 rotate-[50deg]">
         <div
           className="aspect-[1155/678] w-[30vw] bg-gradient-to-tr from-orange-400 to-red-800 dark:from-cyan-400 dark:to-sky-500 opacity-30 sm:left-0 "
           style={{

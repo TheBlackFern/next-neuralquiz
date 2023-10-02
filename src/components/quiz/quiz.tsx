@@ -1,12 +1,10 @@
 "use client";
 
+import React from "react";
+import { Skeleton } from "../ui/skeleton";
 import QuizForm from "./quiz-form";
-import { LazyMotion, domAnimation } from "framer-motion";
 
 import { TQuestions, fetchQuestionsByTestID } from "@/db";
-// import { useGetQuestionsByIdQuery } from "@/redux/api";
-import { useEffect, useState } from "react";
-import { Skeleton } from "../ui/skeleton";
 
 type QuizProps = {
   testID: number;
@@ -19,9 +17,11 @@ const Quiz = ({ testID }: QuizProps) => {
   //   isLoading,
   // } = useGetQuestionsByIdQuery(testID);
   // TODO: RTK Query or React Query, please!
-  const [testQuestions, setTestQuestions] = useState<TQuestions | null>(null);
+  const [testQuestions, setTestQuestions] = React.useState<TQuestions | null>(
+    null
+  );
 
-  useEffect(() => {
+  React.useEffect(() => {
     let active = true;
     load();
     return () => {

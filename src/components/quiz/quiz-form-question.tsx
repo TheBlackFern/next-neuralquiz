@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction } from "react";
+import Image from "next/image";
 import {
   Card,
   CardContent,
@@ -9,17 +9,16 @@ import {
 } from "../ui/card";
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 import { Label } from "../ui/label";
-import Image from "next/image";
 import { Button } from "../ui/button";
+import { TChoice } from "./quiz-form";
 
 import { cn } from "@/lib/utils";
 import { Question } from "@/db/schema";
-import { TChoice } from "./quiz-form";
 
 type QuizFormQuestionProps = {
   question: Question;
   step: number;
-  setStep: Dispatch<SetStateAction<number>>;
+  setStep: React.Dispatch<React.SetStateAction<number>>;
   handleChoice: (option: string, answer: string, index: number) => void;
   choice?: TChoice;
 };
@@ -32,28 +31,30 @@ const QuizFormQuestion = ({
   choice,
 }: QuizFormQuestionProps) => {
   return (
-    <Card
+    <section
       className={cn(
-        "w-auto h-auto flex justify-center items-center flex-row",
+        "rounded-lg border bg-card text-card-foreground shadow-sm w-[300px] h-auto flex justify-start items-center flex-row",
         question.image && "md:w-[600px]"
       )}
     >
       <div>
-        <CardHeader>
-          <CardTitle>Question {step + 1}</CardTitle>
-          <CardDescription>{question.question}</CardDescription>
+        <div className="flex flex-col space-y-1.5 p-6">
+          <h2 className="text-2xl font-semibold leading-none tracking-tight">
+            Question {step + 1}
+          </h2>
+          <p className="text-sm text-muted-foregrounds">{question.question}</p>
           {question.image && (
             <Image
               src={question.image}
-              width={200}
-              height={200}
-              className="w-[200px] h-[200px] md:hidden self-center"
+              width={250}
+              height={250}
+              className="w-[250px] h-[250px] md:hidden self-center"
               alt="question image"
             />
           )}
-        </CardHeader>
+        </div>
 
-        <CardContent className="w-full flex flex-col gap-2">
+        <p className="p-6 pt-0 w-full flex flex-col gap-2">
           <RadioGroup
             onValueChange={(value) => {
               handleChoice(value, question.answer, step);
@@ -79,8 +80,8 @@ const QuizFormQuestion = ({
               </div>
             ))}
           </RadioGroup>
-        </CardContent>
-        <CardFooter className="flex justify-between">
+        </p>
+        <div className="items-center p-6 pt-0 flex justify-between">
           <Button onClick={() => setStep((prev) => prev + 1)} className="w-16">
             {choice ? "Next" : "Skip"}
           </Button>
@@ -92,7 +93,7 @@ const QuizFormQuestion = ({
               Back
             </Button>
           )}
-        </CardFooter>
+        </div>
       </div>
       {question.image && (
         <Image
@@ -103,7 +104,7 @@ const QuizFormQuestion = ({
           alt="question image"
         />
       )}
-    </Card>
+    </section>
   );
 };
 

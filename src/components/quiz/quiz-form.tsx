@@ -1,12 +1,11 @@
-import { useState } from "react";
-import { m } from "framer-motion";
-import { cn } from "@/lib/utils";
+import React from "react";
+import Link from "next/link";
 import { Button, buttonVariants } from "../ui/button";
 import QuizFormQuestion from "./quiz-form-question";
 import QuizFormResults from "./quiz-form-results";
-
+import { m } from "framer-motion";
+import { cn } from "@/lib/utils";
 import { TQuestions } from "@/db";
-import Link from "next/link";
 
 type QuizFormProps = {
   questions: TQuestions;
@@ -18,10 +17,10 @@ export type TChoice = {
 };
 
 const QuizForm = ({ questions }: QuizFormProps) => {
-  const [choices, setChoices] = useState<Array<TChoice | undefined>>(
+  const [choices, setChoices] = React.useState<Array<TChoice | undefined>>(
     Array(questions.length)
   );
-  const [step, setStep] = useState(0);
+  const [step, setStep] = React.useState(0);
 
   const handleChoice = (option: string, answer: string, index: number) => {
     setChoices((prev) => {

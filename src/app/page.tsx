@@ -1,8 +1,7 @@
-import { Button, buttonVariants } from "@/components/ui/button";
-import { fetchTests } from "@/db";
-import { cn } from "@/lib/utils";
-import { Plus } from "lucide-react";
 import Link from "next/link";
+import { buttonVariants } from "@/components/ui/button";
+import { Plus } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 async function Page() {
   return (
