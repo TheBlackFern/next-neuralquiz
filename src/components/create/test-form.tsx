@@ -51,7 +51,7 @@ export function TestForm() {
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="space-y-8 min-w-[300px] max-w-[1000px]"
+          className="space-y-4 min-w-[300px] max-w-[1000px]"
         >
           <FormField
             control={form.control}

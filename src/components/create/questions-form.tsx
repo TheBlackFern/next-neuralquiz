@@ -93,13 +93,13 @@ export function QuestionsForm({
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="space-y-1 min-w-[300px]"
+        className="space-y-[6px] min-w-[300px]"
       >
         <div className="grid grid-flow-row min-[960px]:grid-cols-2 min-[1400px]:grid-cols-3 gap-3 place-content-center auto-cols-fr">
           {fields.map((field, index) => (
             <m.div
               key={index}
-              className="relative border h-auto space-y-1 p-3 w-full"
+              className="relative border h-auto space-y-[8px] p-3 w-full"
             >
               <Button
                 type="button"
@@ -114,7 +114,7 @@ export function QuestionsForm({
                 key={`${field.id}-question`}
                 name={`questions.${index}.question`}
                 render={({ field }) => (
-                  <FormItem>
+                  <FormItem className="space-y-[3px]">
                     <FormLabel>Question*</FormLabel>
                     <FormControl>
                       <Input placeholder="Type in the question..." {...field} />
@@ -128,7 +128,7 @@ export function QuestionsForm({
                 key={`${field.id}-answer`}
                 name={`questions.${index}.answer`}
                 render={({ field }) => (
-                  <FormItem>
+                  <FormItem className="space-y-[3px]">
                     <FormLabel>Answer*</FormLabel>
                     <FormControl>
                       <Input
@@ -145,15 +145,11 @@ export function QuestionsForm({
                 key={`${field.id}-image`}
                 name={`questions.${index}.image`}
                 render={({ field }) => (
-                  <FormItem>
+                  <FormItem className="space-y-[3px]">
                     <FormLabel>Image</FormLabel>
                     <FormControl>
                       <Input placeholder="Type in an image URL..." {...field} />
                     </FormControl>
-
-                    {/* <FormControl>
-                      <Input placeholder="Type in an image URL..." {...field} />
-                    </FormControl> */}
                     <FormMessage />
                   </FormItem>
                 )}
@@ -163,11 +159,8 @@ export function QuestionsForm({
                 key={`${field.id}-options`}
                 name={`questions.${index}.options`}
                 render={({ field }) => (
-                  <FormItem>
+                  <FormItem className="space-y-[3px]">
                     <FormLabel>Options*</FormLabel>
-                    {/* <FormDescription className={cn(index !== 0 && "sr-only")}>
-                      
-                    </FormDescription> */}
                     <FormControl>
                       <OptionsInput
                         {...field}
