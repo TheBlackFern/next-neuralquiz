@@ -92,7 +92,7 @@ export function QuestionsForm({
         onSubmit={form.handleSubmit(onSubmit)}
         className="space-y-[6px] min-w-[300px]"
       >
-        <div className="grid grid-flow-row min-[960px]:grid-cols-2 min-[1400px]:grid-cols-3 gap-3 place-content-center auto-cols-fr">
+        <div className="grid grid-cols-[repeat(auto-fill,minmax(16rem,1fr))] gap-3 place-content-center">
           {fields.map((field, index) => (
             <m.div
               key={index}

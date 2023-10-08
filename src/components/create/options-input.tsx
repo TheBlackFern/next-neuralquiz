@@ -49,28 +49,30 @@ const OptionsInput = React.forwardRef<HTMLInputElement, OptionsInputProps>(
     };
 
     return (
-      <div>
+      <>
         <div
-          className={`flex flex-col gap-2 rounded-md ${
+          className={`flex flex-col gap-2 rounded-md w-full ${
             options[index].length !== 0 && "mb-3"
           }`}
         >
           {options[index].map((option, index) => (
-            <span
+            <div
               key={index}
-              className="transition-all hover:bg-secondary/80 h-fit w-full max-w-[300px] break-all flex items-center text-sm pl-2 rounded-md"
+              className="transition-all hover:bg-secondary/80 h-fit w-full break-all flex items-center text-sm pl-2 rounded-md"
             >
               <div className="bg-primary h-2 w-2 rounded-full shrink-0 mr-2" />
-              {option}
+              <p>{option}</p>
               <Button
                 type="button"
                 variant="ghost"
                 onClick={() => removeTag(option)}
-                className={cn("py-1 px-3 ml-auto h-full hover:bg-transparent")}
+                className={cn(
+                  "py-1 px-0.5 ml-auto h-full hover:bg-transparent"
+                )}
               >
                 <X size={14} />
               </Button>
-            </span>
+            </div>
           ))}
         </div>
         <div className="flex justify-center items-center gap-2">
@@ -87,7 +89,7 @@ const OptionsInput = React.forwardRef<HTMLInputElement, OptionsInputProps>(
             Add
           </Button>
         </div>
-      </div>
+      </>
     );
   }
 );
