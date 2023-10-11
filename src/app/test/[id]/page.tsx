@@ -1,5 +1,5 @@
 import Link from "next/link";
-import Quiz from "@/components/quiz/quiz";
+import QuizContainer from "@/components/quiz/quiz-container";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -19,7 +19,7 @@ function Page({ params }: PageProps) {
         Back
       </Link>
 
-      <Quiz testID={parseInt(params.id)} />
+      <QuizContainer testID={parseInt(params.id)} />
     </div>
   );
 }

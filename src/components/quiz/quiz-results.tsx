@@ -8,7 +8,7 @@ import {
   CardTitle,
 } from "../ui/card";
 
-type QuizFormResultsProps = {
+type QuizResultsProps = {
   score: number;
   total: number;
   children: ReactNode;
@@ -21,7 +21,7 @@ function ratingPhrase(rating: number) {
   return "Perfect!";
 }
 
-const QuizFormResults = ({ score, total, children }: QuizFormResultsProps) => {
+const QuizResults = ({ score, total, children }: QuizResultsProps) => {
   return (
     <Card className="w-[250px] flex flex-col text-center items-center">
       <CardHeader>
@@ -42,4 +42,4 @@ const QuizFormResults = ({ score, total, children }: QuizFormResultsProps) => {
   );
 };
 
-export default QuizFormResults;
+export default QuizResults;
