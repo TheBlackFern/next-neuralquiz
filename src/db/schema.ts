@@ -9,8 +9,8 @@ export const tests = pgTable("tests", {
 export const questions = pgTable("questions", {
   id: serial("id").primaryKey(),
   question: text("question").notNull(),
-  answer: text("answer").notNull(),
-  options: text("options").array().notNull(),
+  answer: text("answer").array(),
+  options: text("options").array(),
   image: text("image"),
   test: integer("test").references(() => tests.id),
 });
