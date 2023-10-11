@@ -30,10 +30,12 @@ const questionsSchema = z.object({
           .string()
           .min(2, { message: "Topic should be at least 2 characters long." })
           .max(50, { message: "Topic is too long." }),
-        answer: z
-          .string()
-          .min(1, { message: "Answer should be at least 1 character long." })
-          .max(100, { message: "Answer is too long." }),
+        answer: z.array(
+          z
+            .string()
+            .min(1, { message: "Answer should be at least 1 character long." })
+            .max(100, { message: "Answer is too long." })
+        ),
         image: z.string().url().optional(),
         options: z
           .array(z.string())
@@ -46,7 +48,7 @@ const questionsSchema = z.object({
 const questionsInitial: FormQuestion[] = [
   {
     question: "What is 2 + 2?",
-    answer: "4",
+    answer: ["4"],
     options: ["3", "4", "5"],
   },
 ];
@@ -194,7 +196,7 @@ export function QuestionsForm({
               setOptions((prev) => [...prev, []]);
               append({
                 question: "",
-                answer: "",
+                answer: [""],
                 options: [],
               });
             }}
