@@ -16,7 +16,7 @@ type QuizQuestionSingleProps = {
   choice?: TChoice;
 };
 
-//TODO: we don't need all these
+//TODO: we don't need all these props
 
 const QuizQuestionSingle = ({
   question,

@@ -31,6 +31,7 @@ export async function fetchQuestionsByTestID(testID: number) {
       options: questions.options,
       image: questions.image,
       test: questions.test,
+      type: questions.type,
       // test: {
       //   id: tests.id,
       //   topic: tests.topic,
