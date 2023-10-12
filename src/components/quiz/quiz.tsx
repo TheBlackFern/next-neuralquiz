@@ -12,30 +12,32 @@ type QuizProps = {
 };
 
 export type TChoice = {
-  choice: string;
-  isCorrect: boolean;
+  givenAnswer: string | string[];
+  correctAnswer: string | string[] | null;
 };
 
 const Quiz = ({ questions }: QuizProps) => {
-  const [choices, setChoices] = React.useState<Array<TChoice | undefined>>(
+  const [answers, setAnswers] = React.useState<Array<TChoice | undefined>>(
     Array(questions.length)
   );
   const [step, setStep] = React.useState(0);
 
-  const handleChoice = (
-    option: string,
-    answer: string | string[] | null,
-    index: number
-  ) => {
-    setChoices((prev) => {
-      const upd = [...prev];
-      upd[index] = {
-        choice: option,
-        isCorrect: option === answer,
-      };
-      return upd;
-    });
-  };
+  // const handleAnswer = (
+  //   givenAnswer: string | string[],
+  //   correctAnswer: string | string[] | null,
+  //   index: number
+  // ) => {
+  //   setAnswers((prev) => {
+  //     const upd = [...prev];
+
+  //     // TODO: do a proper check
+  //     upd[index] = {
+  //       givenAnswer,
+  //       correctAnswer,
+  //     };
+  //     return upd;
+  //   });
+  // };
 
   return (
     <div className="relative h-[1000px] overflow-x-hidden w-[300px] md:w-[600px]">
@@ -62,8 +64,8 @@ const Quiz = ({ questions }: QuizProps) => {
             key={question.id}
             step={index}
             setStep={setStep}
-            choice={choices[index]}
-            handleChoice={handleChoice}
+            choice={answers[index]}
+            setAnswers={setAnswers}
             question={question}
           />
         </m.div>
@@ -81,8 +83,8 @@ const Quiz = ({ questions }: QuizProps) => {
         }}
       >
         <QuizResults
-          score={choices.reduce<number>((score, choice) => {
-            choice?.isCorrect && score++;
+          score={answers.reduce<number>((score, choice) => {
+            choice?.correctAnswer && score++;
             return score;
           }, 0)}
           total={questions.length}

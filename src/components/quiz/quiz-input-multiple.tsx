@@ -9,11 +9,7 @@ type QuizInputMultipleProps = {
   question: Question;
   step: number;
   setStep: React.Dispatch<React.SetStateAction<number>>;
-  handleChoice: (
-    option: string,
-    answer: string | string[] | null,
-    index: number
-  ) => void;
+  setAnswers: React.Dispatch<React.SetStateAction<(TChoice | undefined)[]>>;
   choice?: TChoice;
 };
 
@@ -21,7 +17,7 @@ const QuizInputMultiple = ({
   question,
   step,
   setStep,
-  handleChoice,
+  setAnswers,
   choice,
 }: QuizInputMultipleProps) => {
   function handleChecked(checked: boolean) {}

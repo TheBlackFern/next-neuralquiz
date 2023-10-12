@@ -7,11 +7,7 @@ type QuizInputOpenProps = {
   question: Question;
   step: number;
   setStep: React.Dispatch<React.SetStateAction<number>>;
-  handleChoice: (
-    option: string,
-    answer: string | string[] | null,
-    index: number
-  ) => void;
+  setAnswers: React.Dispatch<React.SetStateAction<(TChoice | undefined)[]>>;
   choice?: TChoice;
 };
 
@@ -19,13 +15,24 @@ const QuizInputOpen = ({
   question,
   step,
   setStep,
-  handleChoice,
+  setAnswers,
   choice,
 }: QuizInputOpenProps) => {
   return (
     <Input
       placeholder="Write your answer..."
-      onChange={(e) => handleChoice(e.target.value, null, step)}
+      onChange={(e) =>
+        setAnswers((prev) => {
+          const upd = [...prev];
+
+          // TODO: do a proper check
+          upd[step] = {
+            givenAnswer: e.target.value,
+            correctAnswer: null,
+          };
+          return upd;
+        })
+      }
     />
   );
 };

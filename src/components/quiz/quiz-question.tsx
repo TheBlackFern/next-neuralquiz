@@ -15,16 +15,17 @@ type QuizQuestionProps = {
   question: Question;
   step: number;
   setStep: React.Dispatch<React.SetStateAction<number>>;
-  handleChoice: (
-    option: string,
-    answer: string | string[] | null,
-    index: number
-  ) => void;
+  // handleChoice: (
+  //   option: string,
+  //   answer: string | string[] | null,
+  //   index: number
+  // ) => void;
+  setAnswers: React.Dispatch<React.SetStateAction<(TChoice | undefined)[]>>;
   choice?: TChoice;
 };
 
 const QuizQuestion = (props: QuizQuestionProps) => {
-  const { question, step, setStep, handleChoice, choice } = props;
+  const { question, step, setStep, setAnswers, choice } = props;
 
   return (
     <section

@@ -10,11 +10,7 @@ type QuizInputSingleProps = {
   question: Question;
   step: number;
   setStep: React.Dispatch<React.SetStateAction<number>>;
-  handleChoice: (
-    option: string,
-    answer: string | string[] | null,
-    index: number
-  ) => void;
+  setAnswers: React.Dispatch<React.SetStateAction<(TChoice | undefined)[]>>;
   choice?: TChoice;
 };
 
@@ -24,13 +20,22 @@ const QuizInputSingle = ({
   question,
   step,
   setStep,
-  handleChoice,
+  setAnswers,
   choice,
 }: QuizInputSingleProps) => {
   return (
     <RadioGroup
       onValueChange={(value) => {
-        handleChoice(value, question.answer![0], step);
+        setAnswers((prev) => {
+          const upd = [...prev];
+
+          // TODO: do a proper check
+          upd[step] = {
+            givenAnswer: value,
+            correctAnswer: question.answer![0],
+          };
+          return upd;
+        });
       }}
     >
       {question.options &&
