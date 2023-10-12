@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import { Button, buttonVariants } from "../ui/button";
-import QuizQuestionContainer from "./quiz-question-container";
+import QuizQuestion from "./quiz-question";
 import QuizResults from "./quiz-results";
 import { m } from "framer-motion";
 import { cn } from "@/lib/utils";
@@ -22,7 +22,11 @@ const Quiz = ({ questions }: QuizProps) => {
   );
   const [step, setStep] = React.useState(0);
 
-  const handleChoice = (option: string, answer: string, index: number) => {
+  const handleChoice = (
+    option: string,
+    answer: string | string[] | null,
+    index: number
+  ) => {
     setChoices((prev) => {
       const upd = [...prev];
       upd[index] = {
@@ -54,7 +58,7 @@ const Quiz = ({ questions }: QuizProps) => {
           }}
           key={question.id}
         >
-          <QuizQuestionContainer
+          <QuizQuestion
             key={question.id}
             step={index}
             setStep={setStep}

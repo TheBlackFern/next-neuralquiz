@@ -1,5 +1,5 @@
-import React from "react";
 import Image from "next/image";
+
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 import { Label } from "../ui/label";
 import { Button } from "../ui/button";
@@ -7,24 +7,25 @@ import { TChoice } from "./quiz";
 
 import { cn } from "@/lib/utils";
 import { Question } from "@/db/schema";
+import QuizInputSingle from "./quiz-input-single";
+import QuizInputMultiple from "./quiz-input-multiple";
+import QuizInputOpen from "./quiz-input-open";
 
-type QuizQuestionSingleProps = {
+type QuizQuestionProps = {
   question: Question;
   step: number;
   setStep: React.Dispatch<React.SetStateAction<number>>;
-  handleChoice: (option: string, answer: string, index: number) => void;
+  handleChoice: (
+    option: string,
+    answer: string | string[] | null,
+    index: number
+  ) => void;
   choice?: TChoice;
 };
 
-//TODO: we don't need all these props
+const QuizQuestion = (props: QuizQuestionProps) => {
+  const { question, step, setStep, handleChoice, choice } = props;
 
-const QuizQuestionSingle = ({
-  question,
-  step,
-  setStep,
-  handleChoice,
-  choice,
-}: QuizQuestionSingleProps) => {
   return (
     <section
       className={cn(
@@ -51,34 +52,12 @@ const QuizQuestionSingle = ({
           )}
         </div>
 
-        <p className="p-6 pt-0 w-full flex flex-col gap-2">
-          <RadioGroup
-            onValueChange={(value) => {
-              handleChoice(value, question.answer![0], step);
-            }}
-          >
-            {question.options &&
-              question.options.map((option, optionIndex) => (
-                <div className="flex items-center gap-2" key={optionIndex}>
-                  <RadioGroupItem value={option} id={`r${optionIndex}`} />
-                  <Label
-                    htmlFor={`r${optionIndex}`}
-                    className={cn(
-                      " font-normal text-sm w-full"
-                      // choice?.choice === option && {
-                      //   "text-green-500 hover:text-green-500/90":
-                      //     choice?.isCorrect === true,
-                      //   "text-red-500 hover:text-red-500/90":
-                      //     choice?.isCorrect === false,
-                      // }
-                    )}
-                  >
-                    {option}
-                  </Label>
-                </div>
-              ))}
-          </RadioGroup>
+        <p className="p-6 pt-0 w-full">
+          {question.type === "single" && <QuizInputSingle {...props} />}
+          {question.type === "multiple" && <QuizInputMultiple {...props} />}
+          {question.type === "open" && <QuizInputOpen {...props} />}
         </p>
+
         <div className="items-center p-6 pt-0 flex justify-between">
           <Button onClick={() => setStep((prev) => prev + 1)} className="w-16">
             {choice ? "Next" : "Skip"}
@@ -108,4 +87,4 @@ const QuizQuestionSingle = ({
   );
 };
 
-export default QuizQuestionSingle;
+export default QuizQuestion;
