@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useMemo } from "react";
 import Link from "next/link";
 import { Button, buttonVariants } from "../ui/button";
 import QuizQuestion from "./quiz-question";
@@ -12,33 +12,40 @@ type QuizProps = {
   questions: TQuestions;
 };
 
-export type TChoice = {
-  givenAnswer: string | string[];
-  correctAnswer: string | string[] | null;
-};
+export type TAnswer =
+  | { type: "multiple"; answer: string[] }
+  | { type: "single" | "open"; answer: string };
+
+function calculateInitial(questions: TQuestions) {
+  const initialAnswers: TAnswer[] = [];
+  questions.forEach((question) => {
+    switch (question.type) {
+      case "multiple":
+        initialAnswers.push({
+          type: question.type,
+          answer: [],
+        });
+        break;
+      case "open":
+      case "single":
+        initialAnswers.push({
+          type: question.type,
+          answer: "",
+        });
+        break;
+    }
+  });
+  console.log(initialAnswers);
+  return initialAnswers;
+}
 
 const Quiz = ({ questions }: QuizProps) => {
-  const [answers, setAnswers] = React.useState<Array<TChoice | undefined>>(
-    Array(questions.length)
+  const initialAnswers = React.useMemo(
+    () => calculateInitial(questions),
+    [questions]
   );
+  const answers = React.useRef<Array<TAnswer>>(initialAnswers);
   const [step, setStep] = React.useState(0);
-
-  // const handleAnswer = (
-  //   givenAnswer: string | string[],
-  //   correctAnswer: string | string[] | null,
-  //   index: number
-  // ) => {
-  //   setAnswers((prev) => {
-  //     const upd = [...prev];
-
-  //     // TODO: do a proper check
-  //     upd[index] = {
-  //       givenAnswer,
-  //       correctAnswer,
-  //     };
-  //     return upd;
-  //   });
-  // };
 
   return (
     <div className="relative h-[1000px] overflow-x-hidden w-[300px] md:w-[600px]">
@@ -65,8 +72,8 @@ const Quiz = ({ questions }: QuizProps) => {
             key={question.id}
             step={index}
             setStep={setStep}
-            choice={answers[index]}
-            setAnswers={setAnswers}
+            // choice={answers[index]}
+            answers={answers}
             question={question}
           />
         </m.div>
@@ -84,10 +91,13 @@ const Quiz = ({ questions }: QuizProps) => {
         }}
       >
         <QuizResults
-          score={answers.reduce<number>((score, choice) => {
-            choice?.correctAnswer && score++;
-            return score;
-          }, 0)}
+          answers={answers}
+          score={7}
+          // TODO: calculate?
+          // score={answers.reduce<number>((score, choice) => {
+          //   choice?.correctAnswer && score++;
+          //   return score;
+          // }, 0)}
           total={questions.length}
         >
           <Button variant="outline" onClick={() => setStep(0)}>

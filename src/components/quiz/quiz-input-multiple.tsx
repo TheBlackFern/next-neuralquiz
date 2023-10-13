@@ -1,26 +1,23 @@
-import { Question } from "@/db/schema";
 import React from "react";
-import { TChoice } from "./quiz";
 import { Checkbox } from "../ui/checkbox";
 import { Label } from "../ui/label";
 import { cn } from "@/lib/utils";
+import { QuizInputProps } from "./quiz-question";
+import { CheckedState } from "@radix-ui/react-checkbox";
 
-type QuizInputMultipleProps = {
-  question: Question;
-  step: number;
-  setStep: React.Dispatch<React.SetStateAction<number>>;
-  setAnswers: React.Dispatch<React.SetStateAction<(TChoice | undefined)[]>>;
-  choice?: TChoice;
-};
+const QuizInputMultiple = ({ question, step, answers }: QuizInputProps) => {
+  function handleChecked(checked: CheckedState, option: string) {
+    const prevVal = answers.current[step];
+    // had to create a new value and make this check for TS
+    // to understand that yeah this IS the correct type
+    if (prevVal.type !== "multiple") return;
+    if (checked) {
+      !prevVal.answer.includes(option) && prevVal.answer.push(option);
+    } else {
+      prevVal.answer = prevVal.answer.filter((value) => value !== option);
+    }
+  }
 
-const QuizInputMultiple = ({
-  question,
-  step,
-  setStep,
-  setAnswers,
-  choice,
-}: QuizInputMultipleProps) => {
-  function handleChecked(checked: boolean) {}
   return (
     <div className="flex flex-col items-start gap-3">
       {question.options &&
@@ -29,19 +26,11 @@ const QuizInputMultiple = ({
             <Checkbox
               value={option}
               id={`o${optionIndex}`}
-              onCheckedChange={handleChecked}
+              onCheckedChange={(checked) => handleChecked(checked, option)}
             />
             <Label
               htmlFor={`o${optionIndex}`}
-              className={cn(
-                "font-normal text-sm w-full"
-                // choice?.choice === option && {
-                //   "text-green-500 hover:text-green-500/90":
-                //     choice?.isCorrect === true,
-                //   "text-red-500 hover:text-red-500/90":
-                //     choice?.isCorrect === false,
-                // }
-              )}
+              className={cn("font-normal text-sm w-full")}
             >
               {option}
             </Label>

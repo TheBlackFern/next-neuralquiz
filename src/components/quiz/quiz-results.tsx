@@ -7,10 +7,12 @@ import {
   CardHeader,
   CardTitle,
 } from "../ui/card";
+import { TAnswer } from "./quiz";
 
 type QuizResultsProps = {
   score: number;
   total: number;
+  answers: React.MutableRefObject<TAnswer[]>;
   children: ReactNode;
 };
 
@@ -21,18 +23,26 @@ function ratingPhrase(rating: number) {
   return "Perfect!";
 }
 
-const QuizResults = ({ score, total, children }: QuizResultsProps) => {
+const QuizResults = ({ score, total, answers, children }: QuizResultsProps) => {
   return (
-    <Card className="w-[250px] flex flex-col text-center items-center">
+    <Card className="w-fit flex flex-col text-center items-center">
       <CardHeader>
         <CardTitle>Results</CardTitle>
         <CardDescription>{ratingPhrase(score / total)}</CardDescription>
       </CardHeader>
-      <CardContent>
-        <div className="w-24 h-24 from-primary to-primary-foreground bg-gradient-to-b from-40% rounded-full grid place-content-center">
+      <CardContent className="flex flex-col">
+        <div className="w-24 h-24 from-primary to-primary-foreground bg-gradient-to-b from-40% rounded-full grid place-content-center self-center">
           <p className="text-primary-foreground text-3xl font-bold tracking-tighter">
             {`${score} / ${total}`}
           </p>
+        </div>
+        <div className="flex flex-col items-start p-3">
+          {answers.current.map((answer, index) => (
+            <div key={index}>
+              <span className="font-mono">{index}</span> :{" "}
+              {JSON.stringify(answer.answer)}
+            </div>
+          ))}
         </div>
       </CardContent>
       <CardFooter className="flex w-full justify-between">

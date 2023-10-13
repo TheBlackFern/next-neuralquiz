@@ -3,29 +3,29 @@ import Image from "next/image";
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 import { Label } from "../ui/label";
 import { Button } from "../ui/button";
-import { TChoice } from "./quiz";
 
 import { cn } from "@/lib/utils";
 import { Question } from "@/db/schema";
 import QuizInputSingle from "./quiz-input-single";
 import QuizInputMultiple from "./quiz-input-multiple";
 import QuizInputOpen from "./quiz-input-open";
+import { TAnswer } from "./quiz";
 
 type QuizQuestionProps = {
   question: Question;
   step: number;
   setStep: React.Dispatch<React.SetStateAction<number>>;
-  // handleChoice: (
-  //   option: string,
-  //   answer: string | string[] | null,
-  //   index: number
-  // ) => void;
-  setAnswers: React.Dispatch<React.SetStateAction<(TChoice | undefined)[]>>;
-  choice?: TChoice;
+  answers: React.MutableRefObject<TAnswer[]>;
+};
+
+export type QuizInputProps = {
+  question: Question;
+  step: number;
+  answers: React.MutableRefObject<TAnswer[]>;
 };
 
 const QuizQuestion = (props: QuizQuestionProps) => {
-  const { question, step, setStep, setAnswers, choice } = props;
+  const { question, step, setStep, answers } = props;
 
   return (
     <section
@@ -53,15 +53,15 @@ const QuizQuestion = (props: QuizQuestionProps) => {
           )}
         </div>
 
-        <p className="p-6 pt-0 w-full">
+        <div className="p-6 pt-0 w-full">
           {question.type === "single" && <QuizInputSingle {...props} />}
           {question.type === "multiple" && <QuizInputMultiple {...props} />}
           {question.type === "open" && <QuizInputOpen {...props} />}
-        </p>
+        </div>
 
         <div className="items-center p-6 pt-0 flex justify-between">
           <Button onClick={() => setStep((prev) => prev + 1)} className="w-16">
-            {choice ? "Next" : "Skip"}
+            Next
           </Button>
           {step !== 0 && (
             <Button
