@@ -14,8 +14,9 @@ import { TAnswer } from "./quiz";
 type QuizQuestionProps = {
   question: Question;
   step: number;
-  setStep: React.Dispatch<React.SetStateAction<number>>;
   answers: React.MutableRefObject<TAnswer[]>;
+
+  children: React.ReactNode;
 };
 
 export type QuizInputProps = {
@@ -25,7 +26,7 @@ export type QuizInputProps = {
 };
 
 const QuizQuestion = (props: QuizQuestionProps) => {
-  const { question, step, setStep, answers } = props;
+  const { question, step, answers, children } = props;
 
   return (
     <section
@@ -60,17 +61,7 @@ const QuizQuestion = (props: QuizQuestionProps) => {
         </div>
 
         <div className="items-center p-6 pt-0 flex justify-between">
-          <Button onClick={() => setStep((prev) => prev + 1)} className="w-16">
-            Next
-          </Button>
-          {step !== 0 && (
-            <Button
-              onClick={() => setStep((prev) => prev - 1)}
-              variant="outline"
-            >
-              Back
-            </Button>
-          )}
+          {children}
         </div>
       </div>
       {question.image && (

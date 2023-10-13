@@ -48,7 +48,7 @@ const Quiz = ({ questions }: QuizProps) => {
   const [step, setStep] = React.useState(0);
 
   return (
-    <div className="relative h-[1000px] overflow-x-hidden w-[300px] md:w-[600px]">
+    <div className="relative h-[1000px] w-[300px] md:w-[600px]">
       {questions.map((question, index) => (
         <m.div
           className={cn(
@@ -71,46 +71,67 @@ const Quiz = ({ questions }: QuizProps) => {
           <QuizQuestion
             key={question.id}
             step={index}
-            setStep={setStep}
-            // choice={answers[index]}
             answers={answers}
             question={question}
-          />
+          >
+            <Button
+              disabled={step !== index}
+              onClick={() => setStep((prev) => prev + 1)}
+              className="w-16"
+            >
+              Next
+            </Button>
+            {step !== 0 && (
+              <Button
+                disabled={step !== index}
+                onClick={() => setStep((prev) => prev - 1)}
+                variant="outline"
+              >
+                Back
+              </Button>
+            )}
+          </QuizQuestion>
         </m.div>
       ))}
-      <m.div
-        className="flex absolute top-0 left-0 right-0 flex-col justify-center items-center gap-3"
-        animate={{
-          translateX: `${-(step - questions.length) * 600}px`,
-        }}
-        style={{
-          translateX: `${-(step - questions.length) * 600}px`,
-        }}
-        transition={{
-          ease: "easeInOut",
-        }}
-      >
-        <QuizResults
-          answers={answers}
-          score={7}
-          // TODO: calculate?
-          // score={answers.reduce<number>((score, choice) => {
-          //   choice?.correctAnswer && score++;
-          //   return score;
-          // }, 0)}
-          total={questions.length}
+      {step > questions.length - 2 && (
+        <m.div
+          className="flex absolute top-0 left-0 right-0 flex-col justify-center items-center gap-3"
+          animate={{
+            translateX: `${-(step - questions.length) * 600}px`,
+          }}
+          style={{
+            translateX: `${-(step - questions.length) * 600}px`,
+          }}
+          transition={{
+            ease: "easeInOut",
+          }}
         >
-          <Button variant="outline" onClick={() => setStep(0)}>
-            Retake
-          </Button>
-          <Link
-            href="/tests"
-            className={cn(buttonVariants({ variant: "default" }))}
+          <QuizResults
+            answers={answers}
+            score={7}
+            // TODO: calculate?
+            // score={answers.reduce<number>((score, choice) => {
+            //   choice?.correctAnswer && score++;
+            //   return score;
+            // }, 0)}
+            total={questions.length}
           >
-            New Test
-          </Link>
-        </QuizResults>
-      </m.div>
+            <Button
+              disabled={step !== questions.length}
+              variant="outline"
+              onClick={() => setStep(0)}
+            >
+              Retake
+            </Button>
+            <Link
+              href="/tests"
+              className={cn(buttonVariants({ variant: "default" }))}
+            >
+              New Test
+            </Link>
+          </QuizResults>
+        </m.div>
+      )}
     </div>
   );
 };
