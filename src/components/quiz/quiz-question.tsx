@@ -46,9 +46,8 @@ const QuizQuestion = (props: QuizQuestionProps) => {
             <div className="relative shrink-0 w-[250px] p-6 h-[250px] md:hidden self-center">
               <Image
                 src={question.image}
-                layout="fill"
-                objectFit="cover"
-                objectPosition="center"
+                fill={true}
+                className="object-cover object-center"
                 alt="question image"
               />
             </div>
@@ -69,9 +68,8 @@ const QuizQuestion = (props: QuizQuestionProps) => {
         <div className="relative w-[300px] h-[250px] max-md:hidden self-center shrink-0 ml-auto mr-5">
           <Image
             src={question.image}
-            layout="fill"
-            objectFit="cover"
-            objectPosition="center"
+            fill={true}
+            className="object-cover object-center"
             alt="question image"
           />
         </div>
