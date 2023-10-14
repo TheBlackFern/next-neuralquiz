@@ -36,8 +36,8 @@ const QuizQuestion = (props: QuizQuestionProps) => {
         question.image && "md:w-[600px]"
       )}
     >
-      <div className="max-w-[300px]">
-        <div className="flex flex-col space-y-1.5 p-6">
+      <div className="w-full max-w-[300px]">
+        <div className="flex flex-col space-y-1.5 p-6 pb-3">
           <h2 className="text-2xl font-semibold leading-none tracking-tight">
             Question {step + 1}
           </h2>
@@ -46,9 +46,8 @@ const QuizQuestion = (props: QuizQuestionProps) => {
             <div className="relative shrink-0 w-[250px] p-6 h-[250px] md:hidden self-center">
               <Image
                 src={question.image}
-                layout="fill"
-                objectFit="cover"
-                objectPosition="center"
+                fill={true}
+                className="object-cover object-center"
                 alt="question image"
               />
             </div>
@@ -61,7 +60,7 @@ const QuizQuestion = (props: QuizQuestionProps) => {
           {question.type === "open" && <QuizInputOpen {...props} />}
         </div>
 
-        <div className="items-center p-6 pt-0 flex justify-between">
+        <div className="w-full items-center p-6 pt-0 flex justify-between">
           {children}
         </div>
       </div>
@@ -69,9 +68,8 @@ const QuizQuestion = (props: QuizQuestionProps) => {
         <div className="relative w-[300px] h-[250px] max-md:hidden self-center shrink-0 ml-auto mr-5">
           <Image
             src={question.image}
-            layout="fill"
-            objectFit="cover"
-            objectPosition="center"
+            fill={true}
+            className="object-cover object-center"
             alt="question image"
           />
         </div>
