@@ -35,7 +35,6 @@ function calculateInitial(questions: TQuestions) {
         break;
     }
   });
-  console.log(initialAnswers);
   return initialAnswers;
 }
 
@@ -48,7 +47,7 @@ const Quiz = ({ questions }: QuizProps) => {
   const [step, setStep] = React.useState(0);
 
   return (
-    <div className="relative h-[1000px] w-[300px] md:w-[600px] overflow-x-hidden">
+    <div className="relative min-h-screen w-[300px] md:w-[600px] overflow-x-hidden">
       {questions.map((question, index) => (
         <m.div
           className={cn(
@@ -94,47 +93,49 @@ const Quiz = ({ questions }: QuizProps) => {
           </QuizQuestion>
         </m.div>
       ))}
-      {step > questions.length - 2 && (
-        <m.div
-          className="flex absolute top-0 left-0 right-0 flex-col justify-center items-center gap-3"
-          animate={{
-            translateX: `${-(step - questions.length) * 600}px`,
-          }}
-          style={{
-            translateX: `${-(step - questions.length) * 600}px`,
-          }}
-          transition={{
-            ease: "easeInOut",
-          }}
+      <m.div
+        className="flex absolute top-0 left-0 right-0 flex-col justify-center items-center gap-3"
+        animate={{
+          translateX: `${-(step - questions.length) * 600}px`,
+        }}
+        style={{
+          translateX: `${-(step - questions.length) * 600}px`,
+        }}
+        transition={{
+          ease: "easeInOut",
+        }}
+      >
+        <QuizResults
+          correctAnswers={questions.reduce<Array<string | string[] | null>>(
+            (acc, question) => {
+              acc.push(question.answer);
+              return acc;
+            },
+            []
+          )}
+          answers={answers}
+          // TODO: calculate?
+          // score={answers.reduce<number>((score, choice) => {
+          //   choice?.correctAnswer && score++;
+          //   return score;
+          // }, 0)}
         >
-          <QuizResults
-            answers={answers}
-            score={7}
-            // TODO: calculate?
-            // score={answers.reduce<number>((score, choice) => {
-            //   choice?.correctAnswer && score++;
-            //   return score;
-            // }, 0)}
-            total={questions.length}
+          <Button
+            disabled={step !== questions.length}
+            variant="outline"
+            onClick={() => setStep(0)}
           >
-            <Button
-              disabled={step !== questions.length}
-              variant="outline"
-              onClick={() => setStep(0)}
-            >
-              Retake
-            </Button>
-            {/* FIXME: disable from tabbing!!!! */}
-            <Link
-              href="/tests"
-              tabIndex={step !== questions.length ? -1 : 0}
-              className={cn(buttonVariants({ variant: "default" }))}
-            >
-              New Test
-            </Link>
-          </QuizResults>
-        </m.div>
-      )}
+            Retake
+          </Button>
+          <Link
+            href="/tests"
+            tabIndex={step !== questions.length ? -1 : 0}
+            className={cn(buttonVariants({ variant: "default" }))}
+          >
+            New Test
+          </Link>
+        </QuizResults>
+      </m.div>
     </div>
   );
 };

@@ -10,8 +10,7 @@ import {
 import { TAnswer } from "./quiz";
 
 type QuizResultsProps = {
-  score: number;
-  total: number;
+  correctAnswers: Array<string | string[] | null>;
   answers: React.MutableRefObject<TAnswer[]>;
   children: ReactNode;
 };
@@ -23,26 +22,92 @@ function ratingPhrase(rating: number) {
   return "Perfect!";
 }
 
-const QuizResults = ({ score, total, answers, children }: QuizResultsProps) => {
+function calculateCorrectness(
+  answers: TAnswer[],
+  correctAnswers: Array<string | string[] | null>
+) {
+  return answers.reduce<(boolean | null)[]>((isCorrect, answer, index) => {
+    switch (answer.type) {
+      case "multiple":
+        isCorrect.push(
+          answer.answer.sort().join(",") ===
+            (correctAnswers[index] as string[]).sort().join(",")
+        );
+        break;
+      case "open":
+        isCorrect.push(null);
+        break;
+      case "single":
+        isCorrect.push(answer.answer === correctAnswers[index]);
+        break;
+    }
+    return isCorrect;
+  }, []);
+}
+
+const QuizResults = ({
+  correctAnswers,
+  answers,
+  children,
+}: QuizResultsProps) => {
+  // const correctness = calculateCorrectness(answers.current, correctAnswers);
+
+  // const score = correctness.reduce<number>((score, isCorrect) => {
+  //   if (isCorrect) score += +isCorrect;
+  //   return score;
+  // }, 0);
+  // const total = correctAnswers.length;
+
   return (
     <Card className="w-fit flex flex-col text-center items-center">
       <CardHeader>
         <CardTitle>Results</CardTitle>
-        <CardDescription>{ratingPhrase(score / total)}</CardDescription>
+        {/* <CardDescription>{ratingPhrase(score / total)}</CardDescription> */}
       </CardHeader>
-      <CardContent className="flex flex-col">
-        <div className="w-24 h-24 from-primary to-primary-foreground bg-gradient-to-b from-40% rounded-full grid place-content-center self-center">
+      <CardContent className="flex w-full flex-col">
+        {/* <div className="w-24 h-24 from-primary to-primary-foreground bg-gradient-to-b from-40% rounded-full grid place-content-center self-center">
           <p className="text-primary-foreground text-3xl font-bold tracking-tighter">
             {`${score} / ${total}`}
           </p>
-        </div>
-        <div className="flex flex-col items-start p-3">
-          {answers.current.map((answer, index) => (
-            <div key={index}>
-              <span className="font-mono">{index}</span> :{" "}
-              {JSON.stringify(answer.answer)}
-            </div>
-          ))}
+        </div> */}
+        <div className="grid grid-cols-2 items-center gap-2 p-3">
+          <p className="font-medium text-xs sm:text-sm text-muted-foreground">
+            Your answer
+          </p>
+          <p className="font-medium text-xs sm:text-sm text-muted-foreground">
+            Correct answer
+          </p>
+          {answers.current.map((answer, index) => {
+            switch (answer.type) {
+              case "multiple":
+                return (
+                  <>
+                    <p className="text-xs sm:text-sm">
+                      {answer.answer.sort().join(", ")}
+                    </p>
+                    <p className="text-xs sm:text-sm">
+                      {(correctAnswers[index] as string[]).sort().join(", ")}
+                    </p>
+                  </>
+                );
+              case "open":
+                return (
+                  <>
+                    <p className="text-xs sm:text-sm">{answer.answer}</p>
+                    <p className="text-xs sm:text-sm">-</p>
+                  </>
+                );
+              case "single":
+                return (
+                  <>
+                    <p className="text-xs sm:text-sm">{answer.answer}</p>
+                    <p className="text-xs sm:text-sm">
+                      {correctAnswers[index]}
+                    </p>
+                  </>
+                );
+            }
+          })}
         </div>
       </CardContent>
       <CardFooter className="flex w-full justify-between gap-3">
