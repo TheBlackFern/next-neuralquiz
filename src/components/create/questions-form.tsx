@@ -40,6 +40,7 @@ const questionsSchema = z.object({
         options: z
           .array(z.string())
           .min(2, { message: "There should be at least 2 option." }),
+        type: z.string(),
       })
     )
     .min(1, { message: "The test should have at least one question." }),
@@ -50,6 +51,7 @@ const questionsInitial: FormQuestion[] = [
     question: "What is 2 + 2?",
     answer: ["4"],
     options: ["3", "4", "5"],
+    type: "single",
   },
 ];
 
@@ -198,6 +200,7 @@ export function QuestionsForm({
                 question: "",
                 answer: [""],
                 options: [],
+                type: "single",
               });
             }}
           >

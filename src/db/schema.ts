@@ -13,6 +13,7 @@ export const questions = pgTable("questions", {
   options: text("options").array(),
   image: text("image"),
   test: integer("test").references(() => tests.id),
+  type: text("type").notNull(),
 });
 
 // export const testsRelations = relations(tests, ({ many }) => ({
