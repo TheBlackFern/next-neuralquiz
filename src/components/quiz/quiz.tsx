@@ -1,5 +1,5 @@
 "use client";
-import React, { useMemo } from "react";
+import React from "react";
 import Link from "next/link";
 import { Button, buttonVariants } from "../ui/button";
 import QuizQuestion from "./quiz-question";
@@ -48,7 +48,7 @@ const Quiz = ({ questions }: QuizProps) => {
   const [step, setStep] = React.useState(0);
 
   return (
-    <div className="relative h-[1000px] w-[300px] md:w-[600px]">
+    <div className="relative h-[1000px] w-[300px] md:w-[600px] overflow-x-hidden">
       {questions.map((question, index) => (
         <m.div
           className={cn(
@@ -70,6 +70,7 @@ const Quiz = ({ questions }: QuizProps) => {
         >
           <QuizQuestion
             key={question.id}
+            currentStep={step}
             step={index}
             answers={answers}
             question={question}
@@ -123,8 +124,10 @@ const Quiz = ({ questions }: QuizProps) => {
             >
               Retake
             </Button>
+            {/* FIXME: disable from tabbing!!!! */}
             <Link
               href="/tests"
+              tabIndex={step !== questions.length ? -1 : 0}
               className={cn(buttonVariants({ variant: "default" }))}
             >
               New Test

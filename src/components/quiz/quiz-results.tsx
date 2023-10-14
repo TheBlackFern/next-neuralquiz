@@ -45,7 +45,7 @@ const QuizResults = ({ score, total, answers, children }: QuizResultsProps) => {
           ))}
         </div>
       </CardContent>
-      <CardFooter className="flex w-full justify-between">
+      <CardFooter className="flex w-full justify-between gap-3">
         {children}
       </CardFooter>
     </Card>

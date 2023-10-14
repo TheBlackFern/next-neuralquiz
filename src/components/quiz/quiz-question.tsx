@@ -13,20 +13,21 @@ import { TAnswer } from "./quiz";
 
 type QuizQuestionProps = {
   question: Question;
+  currentStep: number;
   step: number;
   answers: React.MutableRefObject<TAnswer[]>;
-
   children: React.ReactNode;
 };
 
 export type QuizInputProps = {
   question: Question;
+  currentStep: number;
   step: number;
   answers: React.MutableRefObject<TAnswer[]>;
 };
 
 const QuizQuestion = (props: QuizQuestionProps) => {
-  const { question, step, answers, children } = props;
+  const { question, currentStep, step, answers, children } = props;
 
   return (
     <section

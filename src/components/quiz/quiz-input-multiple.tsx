@@ -5,7 +5,12 @@ import { cn } from "@/lib/utils";
 import { QuizInputProps } from "./quiz-question";
 import { CheckedState } from "@radix-ui/react-checkbox";
 
-const QuizInputMultiple = ({ question, step, answers }: QuizInputProps) => {
+const QuizInputMultiple = ({
+  question,
+  currentStep,
+  step,
+  answers,
+}: QuizInputProps) => {
   function handleChecked(checked: CheckedState, option: string) {
     const prevVal = answers.current[step];
     // had to create a new value and make this check for TS
@@ -24,6 +29,7 @@ const QuizInputMultiple = ({ question, step, answers }: QuizInputProps) => {
         question.options.map((option, optionIndex) => (
           <div className="flex items-center gap-2" key={optionIndex}>
             <Checkbox
+              disabled={currentStep !== step}
               value={option}
               id={`o${optionIndex}`}
               onCheckedChange={(checked) => handleChecked(checked, option)}
