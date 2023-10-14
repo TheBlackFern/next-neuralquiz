@@ -37,7 +37,7 @@ const QuizQuestion = (props: QuizQuestionProps) => {
       )}
     >
       <div className="w-full max-w-[300px]">
-        <div className="flex flex-col space-y-1.5 p-6">
+        <div className="flex flex-col space-y-1.5 p-6 pb-3">
           <h2 className="text-2xl font-semibold leading-none tracking-tight">
             Question {step + 1}
           </h2>
