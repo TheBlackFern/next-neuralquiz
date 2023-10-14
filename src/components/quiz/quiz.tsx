@@ -48,10 +48,15 @@ const Quiz = ({ questions }: QuizProps) => {
 
   return (
     <div className="flex flex-col items-center gap-2 min-h-screen w-[300px] md:w-[600px] overflow-x-hidden">
-      <div className="max-w-[300px] h-fit flex flex-row flex-wrap justify-center gap-0.5">
+      <div className="max-xs:max-w-[300px] w-fit h-auto flex flex-row flex-wrap justify-center gap-2 pt-1">
         {questions.map((question, index) => (
           <Button
-            className="h-10 w-10"
+            variant={"outline"}
+            className={cn(
+              step === index &&
+                "bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground",
+              "h-8 w-8 text-sm"
+            )}
             onClick={() => setStep(index)}
             key={question.id}
           >
