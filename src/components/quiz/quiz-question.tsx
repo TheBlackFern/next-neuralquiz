@@ -36,7 +36,7 @@ const QuizQuestion = (props: QuizQuestionProps) => {
         question.image && "md:w-[600px]"
       )}
     >
-      <div className="max-w-[300px]">
+      <div className="w-full max-w-[300px]">
         <div className="flex flex-col space-y-1.5 p-6">
           <h2 className="text-2xl font-semibold leading-none tracking-tight">
             Question {step + 1}
@@ -61,7 +61,7 @@ const QuizQuestion = (props: QuizQuestionProps) => {
           {question.type === "open" && <QuizInputOpen {...props} />}
         </div>
 
-        <div className="items-center p-6 pt-0 flex justify-between">
+        <div className="w-full items-center p-6 pt-0 flex justify-between">
           {children}
         </div>
       </div>
