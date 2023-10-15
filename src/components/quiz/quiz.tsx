@@ -5,8 +5,9 @@ import { Button, buttonVariants } from "../ui/button";
 import QuizQuestion from "./quiz-question";
 import { m } from "framer-motion";
 
-import { cn } from "@/lib/utils";
 import { useToast } from "../ui/use-toast";
+import { useRouter } from "next/navigation";
+import { cn, getErrorMessage } from "@/lib/utils";
 
 import { TQuestions, createResults } from "@/db";
 import { TAnswer } from "@/db/schema";
@@ -46,9 +47,28 @@ const Quiz = ({ questions, testID }: QuizProps) => {
   const answers = React.useRef<Array<TAnswer>>(initialAnswers);
   const [step, setStep] = React.useState(0);
   const { toast } = useToast();
+  const router = useRouter();
 
   async function handleSubmit() {
-    const res = await createResults(answers.current, testID);
+    try {
+      const res = await createResults(answers.current, testID);
+      // toast({
+      //   title: "Submitted results",
+      //   description: (
+      //     <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+      //       <code className="text-white">{JSON.stringify(res, null, 2)}</code>
+      //     </pre>
+      //   ),
+      // });
+      router.push("/result/" + res);
+    } catch (error) {
+      toast({
+        title: "Something went wrong",
+        description: `Failed to submit results: ${getErrorMessage(
+          error,
+        )}. Please, try again.`,
+      });
+    }
     // if (res?.result) {
     //   toast({
     //     title: "Submitted results",
@@ -61,12 +81,6 @@ const Quiz = ({ questions, testID }: QuizProps) => {
     //     ),
     //   });
     // }
-    if (res?.error) {
-      toast({
-        title: "Something went wrong",
-        description: `Failed to submit results: ${res.error}. Please, try again.`,
-      });
-    }
   }
 
   return (
@@ -124,14 +138,21 @@ const Quiz = ({ questions, testID }: QuizProps) => {
               answers={answers}
               question={question}
             >
-              <Button
-                disabled={step !== index}
-                onClick={() => setStep((prev) => prev + 1)}
-                className="w-16"
-              >
-                Next
-              </Button>
-              {step !== 0 && (
+              {index === questions.length - 1 && (
+                <Button className="" onClick={handleSubmit}>
+                  Submit
+                </Button>
+              )}
+              {index !== questions.length - 1 && (
+                <Button
+                  disabled={step !== index}
+                  onClick={() => setStep((prev) => prev + 1)}
+                  className="w-16"
+                >
+                  Next
+                </Button>
+              )}
+              {index !== 0 && (
                 <Button
                   disabled={step !== index}
                   onClick={() => setStep((prev) => prev - 1)}

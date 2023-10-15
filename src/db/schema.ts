@@ -21,7 +21,9 @@ export const results = pgTable("results", {
   id: serial("id").primaryKey(),
   testtaker: text("testtaker").notNull(),
   answers: json("answers").array().notNull(),
-  test: integer("test").references(() => tests.id),
+  test: integer("test")
+    .references(() => tests.id)
+    .notNull(),
 });
 
 // export const testsRelations = relations(tests, ({ many }) => ({

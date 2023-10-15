@@ -43,7 +43,7 @@ export async function fetchResult(resultID: number) {
         answer: questions.answer,
       })
       .from(questions)
-      .where(eq(questions.test, result[0].id));
+      .where(eq(questions.test, result[0].test));
     return {
       result: result[0],
       correctAnswers: answers.map((val) => val.answer),
@@ -104,16 +104,11 @@ export async function createResults(answers: TAnswer[], testID: number) {
       test: testID,
       answers: answers,
     };
-
     // throw new Error("Test");
-    await db.insert(results).values(result).returning();
+    const createdResult = await db.insert(results).values(result).returning();
+    return createdResult[0].id;
     // revalidatePath("/tests");
-    return {
-      result,
-    };
   } catch (error) {
-    return {
-      error: getErrorMessage(error),
-    };
+    throw new Error(getErrorMessage(error));
   }
 }
