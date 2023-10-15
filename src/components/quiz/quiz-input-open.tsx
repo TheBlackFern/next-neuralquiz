@@ -1,5 +1,6 @@
 import React from "react";
 import { Input } from "../ui/input";
+
 import { QuizInputProps } from "./quiz-question";
 
 const QuizInputOpen = ({ currentStep, step, answers }: QuizInputProps) => {

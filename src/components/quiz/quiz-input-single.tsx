@@ -3,6 +3,7 @@ import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 import { Label } from "../ui/label";
 
 import { cn } from "@/lib/utils";
+
 import { QuizInputProps } from "./quiz-question";
 
 const QuizInputSingle = ({
@@ -30,7 +31,7 @@ const QuizInputSingle = ({
             />
             <Label
               htmlFor={`r${optionIndex}`}
-              className={cn(" font-normal text-sm w-full")}
+              className={cn(" w-full text-sm font-normal")}
             >
               {option}
             </Label>

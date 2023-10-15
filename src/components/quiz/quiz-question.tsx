@@ -1,18 +1,14 @@
 import Image from "next/image";
-
-import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
-import { Label } from "../ui/label";
-import { Button } from "../ui/button";
-
-import { cn } from "@/lib/utils";
-import { Question } from "@/db/schema";
 import QuizInputSingle from "./quiz-input-single";
 import QuizInputMultiple from "./quiz-input-multiple";
 import QuizInputOpen from "./quiz-input-open";
-import { TAnswer } from "./quiz";
+
+import { cn } from "@/lib/utils";
+
+import { TQuestion, TAnswer } from "@/db/schema";
 
 type QuizQuestionProps = {
-  question: Question;
+  question: TQuestion;
   currentStep: number;
   step: number;
   answers: React.MutableRefObject<TAnswer[]>;
@@ -20,7 +16,7 @@ type QuizQuestionProps = {
 };
 
 export type QuizInputProps = {
-  question: Question;
+  question: TQuestion;
   currentStep: number;
   step: number;
   answers: React.MutableRefObject<TAnswer[]>;
@@ -32,8 +28,8 @@ const QuizQuestion = (props: QuizQuestionProps) => {
   return (
     <section
       className={cn(
-        "rounded-lg border bg-card text-card-foreground shadow-sm w-[300px] h-auto flex items-center flex-row",
-        question.image && "md:w-[600px]"
+        "flex h-auto w-[300px] flex-row items-center rounded-lg border bg-card text-card-foreground shadow-sm",
+        question.image && "md:w-[600px]",
       )}
     >
       <div className="w-full max-w-[300px]">
@@ -41,9 +37,9 @@ const QuizQuestion = (props: QuizQuestionProps) => {
           <h2 className="text-2xl font-semibold leading-none tracking-tight">
             Question {step + 1}
           </h2>
-          <p className="text-sm text-muted-foregrounds">{question.question}</p>
+          <p className="text-muted-foregrounds text-sm">{question.question}</p>
           {question.image && (
-            <div className="relative shrink-0 w-[250px] p-6 h-[250px] md:hidden self-center">
+            <div className="relative h-[250px] w-[250px] shrink-0 self-center p-6 md:hidden">
               <Image
                 src={question.image}
                 fill={true}
@@ -54,18 +50,18 @@ const QuizQuestion = (props: QuizQuestionProps) => {
           )}
         </div>
 
-        <div className="p-6 pt-0 w-full">
+        <div className="w-full p-6 pt-0">
           {question.type === "single" && <QuizInputSingle {...props} />}
           {question.type === "multiple" && <QuizInputMultiple {...props} />}
           {question.type === "open" && <QuizInputOpen {...props} />}
         </div>
 
-        <div className="w-full items-center p-6 pt-0 flex justify-between">
+        <div className="flex w-full items-center justify-between p-6 pt-0">
           {children}
         </div>
       </div>
       {question.image && (
-        <div className="relative w-[300px] h-[250px] max-md:hidden self-center shrink-0 ml-auto mr-5">
+        <div className="relative ml-auto mr-5 h-[250px] w-[300px] shrink-0 self-center max-md:hidden">
           <Image
             src={question.image}
             fill={true}

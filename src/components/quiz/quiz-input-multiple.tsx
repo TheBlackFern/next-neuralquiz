@@ -1,7 +1,9 @@
 import React from "react";
 import { Checkbox } from "../ui/checkbox";
 import { Label } from "../ui/label";
+
 import { cn } from "@/lib/utils";
+
 import { QuizInputProps } from "./quiz-question";
 import { CheckedState } from "@radix-ui/react-checkbox";
 
@@ -36,7 +38,7 @@ const QuizInputMultiple = ({
             />
             <Label
               htmlFor={`o${optionIndex}`}
-              className={cn("font-normal text-sm w-full")}
+              className={cn("w-full text-sm font-normal")}
             >
               {option}
             </Label>

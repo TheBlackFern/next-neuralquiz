@@ -16,6 +16,7 @@ import {
 import { Textarea } from "../ui/textarea";
 import { Input } from "@/components/ui/input";
 import { QuestionsForm } from "./questions-form";
+
 import { useForm } from "react-hook-form";
 
 const testSchema = z.object({
@@ -29,7 +30,7 @@ const testSchema = z.object({
 export function TestForm() {
   const [showQuestionsForm, setShowQuestionsForm] = React.useState(false);
   const [test, setTest] = React.useState<z.infer<typeof testSchema> | null>(
-    null
+    null,
   );
   const form = useForm<z.infer<typeof testSchema>>({
     resolver: zodResolver(testSchema),
@@ -44,19 +45,25 @@ export function TestForm() {
     setTest(values);
   }
 
+  function resetTestForm() {
+    setTest(null);
+    setShowQuestionsForm(false);
+    form.reset();
+  }
+
   return (
     <>
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="space-y-4 min-w-[300px] max-w-[1000px]"
+          className="min-w-[300px] max-w-[1000px] space-y-4"
         >
           <FormField
             control={form.control}
             name="topic"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Topic*</FormLabel>
+                <FormLabel className="required">Topic</FormLabel>
                 <FormControl>
                   <Input placeholder="Mechanics 101" {...field} />
                 </FormControl>
@@ -91,7 +98,9 @@ export function TestForm() {
           {!showQuestionsForm && <Button type="submit">Add questions</Button>}
         </form>
       </Form>
-      {showQuestionsForm && <QuestionsForm test={test!} />}
+      {showQuestionsForm && (
+        <QuestionsForm test={test!} resetTestForm={resetTestForm} />
+      )}
     </>
   );
 }

@@ -5,7 +5,7 @@ const Page = async () => {
   const tests = await fetchTests();
 
   return (
-    <div className="flex flex-col justify-center items-center gap-5 mt-12">
+    <div className="mt-12 flex flex-col items-center justify-center gap-5">
       <h2 className="text-3xl font-medium">Select a test</h2>
       {tests ? (
         tests.map((test) => <QuizLink key={test.id} test={test} />)

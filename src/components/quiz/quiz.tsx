@@ -3,18 +3,14 @@ import React from "react";
 import Link from "next/link";
 import { Button, buttonVariants } from "../ui/button";
 import QuizQuestion from "./quiz-question";
-import QuizResults from "./quiz-results";
 import { m } from "framer-motion";
-import { cn } from "@/lib/utils";
-import { TQuestions } from "@/db";
 
-type QuizProps = {
-  questions: TQuestions;
-};
+import { useToast } from "../ui/use-toast";
+import { useRouter } from "next/navigation";
+import { cn, getErrorMessage } from "@/lib/utils";
 
-export type TAnswer =
-  | { type: "multiple"; answer: string[] }
-  | { type: "single" | "open"; answer: string };
+import { TQuestions, createResults } from "@/db";
+import { TAnswer } from "@/db/schema";
 
 function calculateInitial(questions: TQuestions) {
   const initialAnswers: TAnswer[] = [];
@@ -38,24 +34,76 @@ function calculateInitial(questions: TQuestions) {
   return initialAnswers;
 }
 
-const Quiz = ({ questions }: QuizProps) => {
+type QuizProps = {
+  questions: TQuestions;
+  testID: number;
+};
+
+const Quiz = ({ questions, testID }: QuizProps) => {
   const initialAnswers = React.useMemo(
     () => calculateInitial(questions),
-    [questions]
+    [questions],
   );
   const answers = React.useRef<Array<TAnswer>>(initialAnswers);
   const [step, setStep] = React.useState(0);
+  const { toast } = useToast();
+  const router = useRouter();
+
+  async function handleSubmit() {
+    try {
+      const res = await createResults(answers.current, testID);
+      // toast({
+      //   title: "Submitted results",
+      //   description: (
+      //     <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+      //       <code className="text-white">{JSON.stringify(res, null, 2)}</code>
+      //     </pre>
+      //   ),
+      // });
+      router.push("/result/" + res);
+    } catch (error) {
+      toast({
+        title: "Something went wrong",
+        description: `Failed to submit results: ${getErrorMessage(
+          error,
+        )}. Please, try again.`,
+      });
+    }
+    // if (res?.result) {
+    //   toast({
+    //     title: "Submitted results",
+    //     description: (
+    //       <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+    //         <code className="text-white">
+    //           {JSON.stringify(res.result, null, 2)}
+    //         </code>
+    //       </pre>
+    //     ),
+    //   });
+    // }
+  }
 
   return (
-    <div className="flex flex-col items-center gap-2 min-h-screen w-[300px] md:w-[600px] overflow-x-hidden">
-      <div className="max-xs:max-w-[300px] w-fit h-auto flex flex-row flex-wrap justify-center gap-2 pt-1">
+    <div className="flex min-h-screen w-[300px] flex-col items-center gap-2 overflow-x-hidden md:w-[600px]">
+      <div className="mt-2 space-x-3">
+        <Button className="" onClick={handleSubmit}>
+          Submit
+        </Button>
+        <Link
+          href="/tests"
+          className={cn(buttonVariants({ variant: "outline" }))}
+        >
+          Back
+        </Link>
+      </div>
+      <div className="max-xs:max-w-[300px] flex h-auto w-fit flex-row flex-wrap justify-center gap-2 pt-1">
         {questions.map((question, index) => (
           <Button
             variant={"outline"}
             className={cn(
               step === index &&
                 "bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground",
-              "h-8 w-8 text-sm"
+              "h-8 w-8 text-sm",
             )}
             onClick={() => setStep(index)}
             key={question.id}
@@ -64,20 +112,20 @@ const Quiz = ({ questions }: QuizProps) => {
           </Button>
         ))}
       </div>
-      <div className="w-full min-h-screen relative">
+      <div className="relative min-h-screen w-full">
         {questions.map((question, index) => (
           <m.div
             className={cn(
-              "flex top-0 left-0 right-0 flex-col justify-center items-center gap-3",
+              "left-0 right-0 top-0 flex flex-col items-center justify-center gap-3",
               {
                 absolute: index !== 0,
-              }
+              },
             )}
             animate={{
-              translateX: `${-(step - index) * 650}px`,
+              translateX: `${-(step - index) * 600}px`,
             }}
             style={{
-              translateX: `${-(step - index) * 650}px`,
+              translateX: `${-(step - index) * 600}px`,
             }}
             transition={{
               ease: "easeInOut",
@@ -85,20 +133,26 @@ const Quiz = ({ questions }: QuizProps) => {
             key={question.id}
           >
             <QuizQuestion
-              key={question.id}
               currentStep={step}
               step={index}
               answers={answers}
               question={question}
             >
-              <Button
-                disabled={step !== index}
-                onClick={() => setStep((prev) => prev + 1)}
-                className="w-16"
-              >
-                Next
-              </Button>
-              {step !== 0 && (
+              {index === questions.length - 1 && (
+                <Button className="" onClick={handleSubmit}>
+                  Submit
+                </Button>
+              )}
+              {index !== questions.length - 1 && (
+                <Button
+                  disabled={step !== index}
+                  onClick={() => setStep((prev) => prev + 1)}
+                  className="w-16"
+                >
+                  Next
+                </Button>
+              )}
+              {index !== 0 && (
                 <Button
                   disabled={step !== index}
                   onClick={() => setStep((prev) => prev - 1)}
@@ -110,25 +164,14 @@ const Quiz = ({ questions }: QuizProps) => {
             </QuizQuestion>
           </m.div>
         ))}
-        <m.div
-          className="flex absolute top-0 left-0 right-0 flex-col justify-center items-center gap-3"
-          animate={{
-            translateX: `${-(step - questions.length) * 600}px`,
-          }}
-          style={{
-            translateX: `${-(step - questions.length) * 600}px`,
-          }}
-          transition={{
-            ease: "easeInOut",
-          }}
-        >
+        {/* <QuizMotion step={step} initOffset={questions.length}>
           <QuizResults
             correctAnswers={questions.reduce<Array<string | string[] | null>>(
               (acc, question) => {
                 acc.push(question.answer);
                 return acc;
               },
-              []
+              [],
             )}
             answers={answers}
             // TODO: calculate?
@@ -152,7 +195,7 @@ const Quiz = ({ questions }: QuizProps) => {
               New Test
             </Link>
           </QuizResults>
-        </m.div>
+        </QuizMotion> */}
       </div>
     </div>
   );

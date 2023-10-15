@@ -2,6 +2,7 @@ import React from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { X } from "lucide-react";
+
 import { cn } from "@/lib/utils";
 
 interface OptionsInputProps
@@ -42,7 +43,7 @@ const OptionsInput = React.forwardRef<HTMLInputElement, OptionsInputProps>(
     const removeTag = (optionToRemove: string) => {
       const newFull = [...options];
       const newOptions = options[index].filter(
-        (option) => option !== optionToRemove
+        (option) => option !== optionToRemove,
       );
       newFull[index] = newOptions;
       setOptions(newFull);
@@ -51,23 +52,23 @@ const OptionsInput = React.forwardRef<HTMLInputElement, OptionsInputProps>(
     return (
       <>
         <div
-          className={`flex flex-col gap-2 rounded-md w-full ${
+          className={`flex w-full flex-col gap-2 rounded-md ${
             options[index].length !== 0 && "mb-3"
           }`}
         >
           {options[index].map((option, index) => (
             <div
               key={index}
-              className="transition-all hover:bg-secondary/80 h-fit w-full break-all flex items-center text-sm pl-2 rounded-md"
+              className="flex h-fit w-full items-center break-all rounded-md pl-2 text-sm transition-all hover:bg-secondary/80"
             >
-              <div className="bg-primary h-2 w-2 rounded-full shrink-0 mr-2" />
+              <div className="mr-2 h-2 w-2 shrink-0 rounded-full bg-primary" />
               <p>{option}</p>
               <Button
                 type="button"
                 variant="ghost"
                 onClick={() => removeTag(option)}
                 className={cn(
-                  "py-1 px-0.5 ml-auto h-full hover:bg-transparent"
+                  "ml-auto h-full px-0.5 py-1 hover:bg-transparent",
                 )}
               >
                 <X size={14} />
@@ -75,7 +76,7 @@ const OptionsInput = React.forwardRef<HTMLInputElement, OptionsInputProps>(
             </div>
           ))}
         </div>
-        <div className="flex justify-center items-center gap-2">
+        <div className="flex items-center justify-center gap-2">
           <Input
             ref={inputRef}
             type="text"
@@ -91,7 +92,7 @@ const OptionsInput = React.forwardRef<HTMLInputElement, OptionsInputProps>(
         </div>
       </>
     );
-  }
+  },
 );
 
 OptionsInput.displayName = "OptionsInput";

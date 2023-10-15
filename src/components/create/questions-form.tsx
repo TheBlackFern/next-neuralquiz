@@ -4,7 +4,7 @@ import React from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 
-import { Button, buttonVariants } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -13,13 +13,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { useFieldArray, useForm } from "react-hook-form";
-
-import { OptionsInput } from "./options-input";
-import { ChevronDown, X } from "lucide-react";
-import { m } from "framer-motion";
-import { createTestWithQuestions } from "@/db";
 import {
   Select,
   SelectContent,
@@ -27,64 +20,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
+import { Input } from "@/components/ui/input";
+import { OptionsInput } from "./options-input";
+import { ChevronDown, X } from "lucide-react";
+import { m } from "framer-motion";
+
+import { useToast } from "../ui/use-toast";
+import { useFieldArray, useForm } from "react-hook-form";
 import { cn } from "@/lib/utils";
+import { createTestWithQuestions } from "@/db";
 
-const questionSchema = z.discriminatedUnion("type", [
-  z.object({
-    question: z
-      .string()
-      .min(2, { message: "Topic should be at least 2 characters long." })
-      .max(50, { message: "Topic is too long." }),
-    image: z.string().url().optional(),
-    type: z.literal("multiple"),
-    answer: z.array(
-      z
-        .string()
-        .min(1, {
-          message: "Answer should be at least 1 character long.",
-        })
-        .max(100, { message: "Answer is too long." })
-    ),
-    options: z
-      .array(z.string())
-      .min(2, { message: "There should be at least 2 option." }),
-  }),
-  z.object({
-    question: z
-      .string()
-      .min(2, { message: "Topic should be at least 2 characters long." })
-      .max(50, { message: "Topic is too long." }),
-    image: z.string().url().optional(),
-    type: z.literal("open"),
-  }),
-  z.object({
-    question: z
-      .string()
-      .min(2, { message: "Topic should be at least 2 characters long." })
-      .max(50, { message: "Topic is too long." }),
-    image: z.string().url().optional(),
-    type: z.literal("single"),
-    answer: z.array(
-      z
-        .string()
-        .min(1, {
-          message: "Answer should be at least 1 character long.",
-        })
-        .max(100, { message: "Answer is too long." })
-    ),
-    options: z
-      .array(z.string())
-      .min(2, { message: "There should be at least 2 option." }),
-  }),
-]);
-
-const questionsSchema = z.object({
-  questions: z
-    .array(questionSchema)
-    .min(1, { message: "The test should have at least one question." }),
-});
-
-// TODO: check if answer in options
+import { questionsSchema } from "@/db/schema";
 
 const questionsInitial: FormQuestion[] = [
   {
@@ -97,14 +43,16 @@ const questionsInitial: FormQuestion[] = [
 
 type FormQuestion = z.infer<typeof questionsSchema>["questions"][number];
 
-export function QuestionsForm({
-  test,
-}: {
+type QuestionsFormProps = {
   test: {
     topic: string;
     description?: string | undefined;
   };
-}) {
+  resetTestForm: () => void;
+};
+
+export function QuestionsForm({ test, resetTestForm }: QuestionsFormProps) {
+  const { toast } = useToast();
   const [collapsed, setCollapsed] = React.useState<boolean[]>([false]);
   // TODO: rewrite with form.setValue!
   const [answers, setAnswers] = React.useState<string[][]>([["4"]]);
@@ -124,9 +72,17 @@ export function QuestionsForm({
   // const isSubmittable = form.formState.isDirty && form.formState.isValid;
 
   async function onSubmit(values: z.infer<typeof questionsSchema>) {
-    await createTestWithQuestions(values.questions, test);
+    const res = await createTestWithQuestions(values.questions, test);
+    if (res?.error) {
+      toast({
+        title: "Something went wrong!",
+        description:
+          "Failed to create a test: " + res.error + ". Please, try again.",
+      });
+    }
     // console.log(values.questions);
     form.reset();
+    resetTestForm();
   }
 
   function removeQuestion(indexToRemove: number) {
@@ -143,19 +99,20 @@ export function QuestionsForm({
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="space-y-[6px] min-w-[300px]"
+        className="min-w-[300px] space-y-[6px]"
       >
-        <div className="grid grid-cols-1 gap-3 place-content-center">
+        <div className="grid grid-cols-1 place-content-center gap-3">
           {fields.map((field, index) => (
             <m.div
               key={index}
               className={cn(
-                "relative rounded-lg border h-auto space-y-[8px] pb-2 px-3 w-full",
-                collapsed[index] && "h-10"
+                "relative h-auto w-full space-y-[8px] rounded-lg border px-4 pb-2",
+                collapsed[index] && "h-10",
               )}
             >
-              <div className="flex items-center justify-between w-full pt-1">
+              <div className="flex w-full items-center justify-between pt-1">
                 <Button
+                  type="button"
                   variant={"ghost"}
                   onClick={() => {
                     setCollapsed((prev) => {
@@ -164,7 +121,7 @@ export function QuestionsForm({
                       return upd;
                     });
                   }}
-                  className={"h-8 w-8 p-0"}
+                  className={"-ml-3 h-8 w-8 p-0"}
                 >
                   <ChevronDown size={20} />
                 </Button>
@@ -175,9 +132,10 @@ export function QuestionsForm({
                   </p>
                 )}
                 <Button
+                  type="button"
                   variant={"ghost"}
                   onClick={() => removeQuestion(index)}
-                  className={"h-8 w-8 p-0"}
+                  className={"-mr-3 h-8 w-8 p-0"}
                 >
                   <X size={20} />
                 </Button>
@@ -191,7 +149,7 @@ export function QuestionsForm({
                     name={`questions.${index}.question`}
                     render={({ field }) => (
                       <FormItem className="space-y-[3px]">
-                        <FormLabel>Question*</FormLabel>
+                        <FormLabel className="required">Question</FormLabel>
                         <FormControl>
                           <Input
                             placeholder="Type in the question..."
@@ -224,7 +182,9 @@ export function QuestionsForm({
                     name={`questions.${index}.type`}
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Question Type*</FormLabel>
+                        <FormLabel className="required">
+                          Question Type
+                        </FormLabel>
                         <Select
                           onValueChange={field.onChange}
                           defaultValue={field.value}
@@ -256,7 +216,7 @@ export function QuestionsForm({
                         name={`questions.${index}.answer`}
                         render={({ field }) => (
                           <FormItem className="space-y-[3px]">
-                            <FormLabel>Answer*</FormLabel>
+                            <FormLabel className="required">Answer</FormLabel>
                             <FormControl>
                               <Input
                                 placeholder="Type in the correct answer..."
@@ -273,7 +233,7 @@ export function QuestionsForm({
                         name={`questions.${index}.options`}
                         render={({ field }) => (
                           <FormItem className="space-y-[3px]">
-                            <FormLabel>Options*</FormLabel>
+                            <FormLabel className="required">Options</FormLabel>
                             <FormControl>
                               <OptionsInput
                                 {...field}
@@ -285,7 +245,7 @@ export function QuestionsForm({
                                   setOptions(newOptions);
                                   form.setValue(
                                     `questions.${index}.options`,
-                                    newOptions[index] as [string, ...string[]]
+                                    newOptions[index] as [string, ...string[]],
                                   );
                                   return setOptions;
                                 }}
@@ -306,7 +266,7 @@ export function QuestionsForm({
                         name={`questions.${index}.answer`}
                         render={({ field }) => (
                           <FormItem className="space-y-[3px]">
-                            <FormLabel>Answers*</FormLabel>
+                            <FormLabel className="required">Answers</FormLabel>
                             <FormControl>
                               <OptionsInput
                                 {...field}
@@ -318,7 +278,7 @@ export function QuestionsForm({
                                   setAnswers(newOptions);
                                   form.setValue(
                                     `questions.${index}.answer`,
-                                    newOptions[index] as [string, ...string[]]
+                                    newOptions[index] as [string, ...string[]],
                                   );
                                   return setOptions;
                                 }}
@@ -334,7 +294,7 @@ export function QuestionsForm({
                         name={`questions.${index}.options`}
                         render={({ field }) => (
                           <FormItem className="space-y-[3px]">
-                            <FormLabel>Options*</FormLabel>
+                            <FormLabel className="required">Options</FormLabel>
                             <FormControl>
                               <OptionsInput
                                 {...field}
@@ -346,7 +306,7 @@ export function QuestionsForm({
                                   setOptions(newOptions);
                                   form.setValue(
                                     `questions.${index}.options`,
-                                    newOptions[index] as [string, ...string[]]
+                                    newOptions[index] as [string, ...string[]],
                                   );
                                   return setOptions;
                                 }}
@@ -363,7 +323,7 @@ export function QuestionsForm({
             </m.div>
           ))}
         </div>
-        <p className="text-destructive text-center">
+        <p className="text-center text-destructive">
           🚧 Image upload is a Work in Progress, coming soon... 🚧
         </p>
         <div className="flex justify-between">

@@ -1,19 +1,12 @@
-import { ReactNode } from "react";
+import React from "react";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
 } from "../ui/card";
-import { TAnswer } from "./quiz";
-
-type QuizResultsProps = {
-  correctAnswers: Array<string | string[] | null>;
-  answers: React.MutableRefObject<TAnswer[]>;
-  children: ReactNode;
-};
+import { TAnswer } from "@/db/schema";
 
 function ratingPhrase(rating: number) {
   if (rating < 0.5) return "Remember, practice makes perfect!";
@@ -24,14 +17,14 @@ function ratingPhrase(rating: number) {
 
 function calculateCorrectness(
   answers: TAnswer[],
-  correctAnswers: Array<string | string[] | null>
+  correctAnswers: Array<string | string[] | null>,
 ) {
   return answers.reduce<(boolean | null)[]>((isCorrect, answer, index) => {
     switch (answer.type) {
       case "multiple":
         isCorrect.push(
           answer.answer.sort().join(",") ===
-            (correctAnswers[index] as string[]).sort().join(",")
+            (correctAnswers[index] as string[]).sort().join(","),
         );
         break;
       case "open":
@@ -44,6 +37,12 @@ function calculateCorrectness(
     return isCorrect;
   }, []);
 }
+
+type QuizResultsProps = {
+  correctAnswers: Array<string[] | null>;
+  answers: TAnswer[];
+  children?: React.ReactNode;
+};
 
 const QuizResults = ({
   correctAnswers,
@@ -59,7 +58,7 @@ const QuizResults = ({
   // const total = correctAnswers.length;
 
   return (
-    <Card className="w-fit flex flex-col text-center items-center">
+    <Card className="flex w-fit flex-col items-center text-center">
       <CardHeader>
         <CardTitle>Results</CardTitle>
         {/* <CardDescription>{ratingPhrase(score / total)}</CardDescription> */}
@@ -71,19 +70,23 @@ const QuizResults = ({
           </p>
         </div> */}
         <div className="grid grid-cols-2 items-center gap-2 p-3">
-          <p className="font-medium text-xs sm:text-sm text-muted-foreground">
+          <p className="text-xs font-medium text-muted-foreground sm:text-sm">
             Your answer
           </p>
-          <p className="font-medium text-xs sm:text-sm text-muted-foreground">
+          <p className="text-xs font-medium text-muted-foreground sm:text-sm">
             Correct answer
           </p>
-          {answers.current.map((answer, index) => {
+          {answers.map((answer, index) => {
             switch (answer.type) {
               case "multiple":
                 return (
                   <>
                     <p className="text-xs sm:text-sm">
-                      {answer.answer.sort().join(", ")}
+                      {answer.answer.length !== 0 ? (
+                        <span className="text-destructive">Not given</span>
+                      ) : (
+                        answer.answer.sort().join(", ")
+                      )}
                     </p>
                     <p className="text-xs sm:text-sm">
                       {(correctAnswers[index] as string[]).sort().join(", ")}
@@ -93,14 +96,26 @@ const QuizResults = ({
               case "open":
                 return (
                   <>
-                    <p className="text-xs sm:text-sm">{answer.answer}</p>
+                    <p className="text-xs sm:text-sm">
+                      {!answer.answer ? (
+                        <span className="text-destructive">Not given</span>
+                      ) : (
+                        answer.answer
+                      )}
+                    </p>
                     <p className="text-xs sm:text-sm">-</p>
                   </>
                 );
               case "single":
                 return (
                   <>
-                    <p className="text-xs sm:text-sm">{answer.answer}</p>
+                    <p className="text-xs sm:text-sm">
+                      {!answer.answer ? (
+                        <span className="text-destructive">Not given</span>
+                      ) : (
+                        answer.answer
+                      )}
+                    </p>
                     <p className="text-xs sm:text-sm">
                       {correctAnswers[index]}
                     </p>
