@@ -3,18 +3,13 @@ import React from "react";
 import Link from "next/link";
 import { Button, buttonVariants } from "../ui/button";
 import QuizQuestion from "./quiz-question";
-import QuizResults from "./quiz-results";
 import { m } from "framer-motion";
+
 import { cn } from "@/lib/utils";
-import { TQuestions } from "@/db";
+import { useToast } from "../ui/use-toast";
 
-type QuizProps = {
-  questions: TQuestions;
-};
-
-export type TAnswer =
-  | { type: "multiple"; answer: string[] }
-  | { type: "single" | "open"; answer: string };
+import { TQuestions, createResults } from "@/db";
+import { TAnswer } from "@/db/schema";
 
 function calculateInitial(questions: TQuestions) {
   const initialAnswers: TAnswer[] = [];
@@ -38,16 +33,55 @@ function calculateInitial(questions: TQuestions) {
   return initialAnswers;
 }
 
-const Quiz = ({ questions }: QuizProps) => {
+type QuizProps = {
+  questions: TQuestions;
+  testID: number;
+};
+
+const Quiz = ({ questions, testID }: QuizProps) => {
   const initialAnswers = React.useMemo(
     () => calculateInitial(questions),
     [questions],
   );
   const answers = React.useRef<Array<TAnswer>>(initialAnswers);
   const [step, setStep] = React.useState(0);
+  const { toast } = useToast();
+
+  async function handleSubmit() {
+    const res = await createResults(answers.current, testID);
+    // if (res?.result) {
+    //   toast({
+    //     title: "Submitted results",
+    //     description: (
+    //       <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+    //         <code className="text-white">
+    //           {JSON.stringify(res.result, null, 2)}
+    //         </code>
+    //       </pre>
+    //     ),
+    //   });
+    // }
+    if (res?.error) {
+      toast({
+        title: "Something went wrong",
+        description: `Failed to submit results: ${res.error}. Please, try again.`,
+      });
+    }
+  }
 
   return (
     <div className="flex min-h-screen w-[300px] flex-col items-center gap-2 overflow-x-hidden md:w-[600px]">
+      <div className="mt-2 space-x-3">
+        <Button className="" onClick={handleSubmit}>
+          Submit
+        </Button>
+        <Link
+          href="/tests"
+          className={cn(buttonVariants({ variant: "outline" }))}
+        >
+          Back
+        </Link>
+      </div>
       <div className="max-xs:max-w-[300px] flex h-auto w-fit flex-row flex-wrap justify-center gap-2 pt-1">
         {questions.map((question, index) => (
           <Button
@@ -74,10 +108,10 @@ const Quiz = ({ questions }: QuizProps) => {
               },
             )}
             animate={{
-              translateX: `${-(step - index) * 650}px`,
+              translateX: `${-(step - index) * 600}px`,
             }}
             style={{
-              translateX: `${-(step - index) * 650}px`,
+              translateX: `${-(step - index) * 600}px`,
             }}
             transition={{
               ease: "easeInOut",
@@ -85,7 +119,6 @@ const Quiz = ({ questions }: QuizProps) => {
             key={question.id}
           >
             <QuizQuestion
-              key={question.id}
               currentStep={step}
               step={index}
               answers={answers}
@@ -110,18 +143,7 @@ const Quiz = ({ questions }: QuizProps) => {
             </QuizQuestion>
           </m.div>
         ))}
-        <m.div
-          className="absolute left-0 right-0 top-0 flex flex-col items-center justify-center gap-3"
-          animate={{
-            translateX: `${-(step - questions.length) * 600}px`,
-          }}
-          style={{
-            translateX: `${-(step - questions.length) * 600}px`,
-          }}
-          transition={{
-            ease: "easeInOut",
-          }}
-        >
+        {/* <QuizMotion step={step} initOffset={questions.length}>
           <QuizResults
             correctAnswers={questions.reduce<Array<string | string[] | null>>(
               (acc, question) => {
@@ -152,7 +174,7 @@ const Quiz = ({ questions }: QuizProps) => {
               New Test
             </Link>
           </QuizResults>
-        </m.div>
+        </QuizMotion> */}
       </div>
     </div>
   );

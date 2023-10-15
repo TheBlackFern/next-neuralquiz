@@ -7,13 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from "../ui/card";
-import { TAnswer } from "./quiz";
-
-type QuizResultsProps = {
-  correctAnswers: Array<string | string[] | null>;
-  answers: React.MutableRefObject<TAnswer[]>;
-  children: ReactNode;
-};
+import { TAnswer } from "@/db/schema";
 
 function ratingPhrase(rating: number) {
   if (rating < 0.5) return "Remember, practice makes perfect!";
@@ -44,6 +38,12 @@ function calculateCorrectness(
     return isCorrect;
   }, []);
 }
+
+type QuizResultsProps = {
+  correctAnswers: Array<string[] | null>;
+  answers: TAnswer[];
+  children?: ReactNode;
+};
 
 const QuizResults = ({
   correctAnswers,
@@ -77,13 +77,17 @@ const QuizResults = ({
           <p className="text-xs font-medium text-muted-foreground sm:text-sm">
             Correct answer
           </p>
-          {answers.current.map((answer, index) => {
+          {answers.map((answer, index) => {
             switch (answer.type) {
               case "multiple":
                 return (
                   <>
                     <p className="text-xs sm:text-sm">
-                      {answer.answer.sort().join(", ")}
+                      {answer.answer.length !== 0 ? (
+                        <span className="text-destructive">Not given</span>
+                      ) : (
+                        answer.answer.sort().join(", ")
+                      )}
                     </p>
                     <p className="text-xs sm:text-sm">
                       {(correctAnswers[index] as string[]).sort().join(", ")}
@@ -93,14 +97,26 @@ const QuizResults = ({
               case "open":
                 return (
                   <>
-                    <p className="text-xs sm:text-sm">{answer.answer}</p>
+                    <p className="text-xs sm:text-sm">
+                      {!answer.answer ? (
+                        <span className="text-destructive">Not given</span>
+                      ) : (
+                        answer.answer
+                      )}
+                    </p>
                     <p className="text-xs sm:text-sm">-</p>
                   </>
                 );
               case "single":
                 return (
                   <>
-                    <p className="text-xs sm:text-sm">{answer.answer}</p>
+                    <p className="text-xs sm:text-sm">
+                      {!answer.answer ? (
+                        <span className="text-destructive">Not given</span>
+                      ) : (
+                        answer.answer
+                      )}
+                    </p>
                     <p className="text-xs sm:text-sm">
                       {correctAnswers[index]}
                     </p>
