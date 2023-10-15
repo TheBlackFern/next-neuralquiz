@@ -56,7 +56,7 @@ export function TestForm() {
             name="topic"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Topic*</FormLabel>
+                <FormLabel className="required">Topic</FormLabel>
                 <FormControl>
                   <Input placeholder="Mechanics 101" {...field} />
                 </FormControl>

@@ -150,7 +150,7 @@ export function QuestionsForm({
             <m.div
               key={index}
               className={cn(
-                "relative rounded-lg border h-auto space-y-[8px] pb-2 px-3 w-full",
+                "relative rounded-lg border h-auto space-y-[8px] pb-2 px-4 w-full",
                 collapsed[index] && "h-10"
               )}
             >
@@ -164,7 +164,7 @@ export function QuestionsForm({
                       return upd;
                     });
                   }}
-                  className={"h-8 w-8 p-0"}
+                  className={"h-8 w-8 p-0 -ml-3"}
                 >
                   <ChevronDown size={20} />
                 </Button>
@@ -177,7 +177,7 @@ export function QuestionsForm({
                 <Button
                   variant={"ghost"}
                   onClick={() => removeQuestion(index)}
-                  className={"h-8 w-8 p-0"}
+                  className={"h-8 w-8 p-0 -mr-3"}
                 >
                   <X size={20} />
                 </Button>
@@ -191,7 +191,7 @@ export function QuestionsForm({
                     name={`questions.${index}.question`}
                     render={({ field }) => (
                       <FormItem className="space-y-[3px]">
-                        <FormLabel>Question*</FormLabel>
+                        <FormLabel className="required">Question</FormLabel>
                         <FormControl>
                           <Input
                             placeholder="Type in the question..."
@@ -224,7 +224,9 @@ export function QuestionsForm({
                     name={`questions.${index}.type`}
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Question Type*</FormLabel>
+                        <FormLabel className="required">
+                          Question Type
+                        </FormLabel>
                         <Select
                           onValueChange={field.onChange}
                           defaultValue={field.value}
@@ -256,7 +258,7 @@ export function QuestionsForm({
                         name={`questions.${index}.answer`}
                         render={({ field }) => (
                           <FormItem className="space-y-[3px]">
-                            <FormLabel>Answer*</FormLabel>
+                            <FormLabel className="required">Answer</FormLabel>
                             <FormControl>
                               <Input
                                 placeholder="Type in the correct answer..."
@@ -273,7 +275,7 @@ export function QuestionsForm({
                         name={`questions.${index}.options`}
                         render={({ field }) => (
                           <FormItem className="space-y-[3px]">
-                            <FormLabel>Options*</FormLabel>
+                            <FormLabel className="required">Options</FormLabel>
                             <FormControl>
                               <OptionsInput
                                 {...field}
@@ -306,7 +308,7 @@ export function QuestionsForm({
                         name={`questions.${index}.answer`}
                         render={({ field }) => (
                           <FormItem className="space-y-[3px]">
-                            <FormLabel>Answers*</FormLabel>
+                            <FormLabel className="required">Answers</FormLabel>
                             <FormControl>
                               <OptionsInput
                                 {...field}
@@ -334,7 +336,7 @@ export function QuestionsForm({
                         name={`questions.${index}.options`}
                         render={({ field }) => (
                           <FormItem className="space-y-[3px]">
-                            <FormLabel>Options*</FormLabel>
+                            <FormLabel className="required">Options</FormLabel>
                             <FormControl>
                               <OptionsInput
                                 {...field}

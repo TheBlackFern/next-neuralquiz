@@ -81,4 +81,7 @@
   html {
     scrollbar-gutter: stable;
   }
+  .required {
+    @apply relative before:content-['*'] before:absolute before:-left-2 before:top-0;
+  }
 }
