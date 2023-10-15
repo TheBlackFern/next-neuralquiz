@@ -3,10 +3,10 @@ import Link from "next/link";
 import { buttonVariants } from "../ui/button";
 import { ChevronsRight } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { Test } from "@/db/schema";
+import { TTest } from "@/db/schema";
 
 type QuizLinkProps = {
-  test: Test;
+  test: TTest;
 };
 
 const QuizLink = ({ test }: QuizLinkProps) => {

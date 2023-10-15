@@ -5,14 +5,13 @@ import { Label } from "../ui/label";
 import { Button } from "../ui/button";
 
 import { cn } from "@/lib/utils";
-import { Question } from "@/db/schema";
+import { TQuestion, TAnswer } from "@/db/schema";
 import QuizInputSingle from "./quiz-input-single";
 import QuizInputMultiple from "./quiz-input-multiple";
 import QuizInputOpen from "./quiz-input-open";
-import { TAnswer } from "./quiz";
 
 type QuizQuestionProps = {
-  question: Question;
+  question: TQuestion;
   currentStep: number;
   step: number;
   answers: React.MutableRefObject<TAnswer[]>;
@@ -20,7 +19,7 @@ type QuizQuestionProps = {
 };
 
 export type QuizInputProps = {
-  question: Question;
+  question: TQuestion;
   currentStep: number;
   step: number;
   answers: React.MutableRefObject<TAnswer[]>;

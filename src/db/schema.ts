@@ -19,8 +19,8 @@ export const questions = pgTable("questions", {
 
 export const results = pgTable("results", {
   id: serial("id").primaryKey(),
-  testtaker: text("testtaker"),
-  answers: json("answers"),
+  testtaker: text("testtaker").notNull(),
+  answers: json("answers").array().notNull(),
   test: integer("test").references(() => tests.id),
 });
 
@@ -35,12 +35,15 @@ export const results = pgTable("results", {
 //   }),
 // }));
 
-export type Test = typeof tests.$inferSelect;
-export type NewTest = typeof tests.$inferInsert;
-export type Question = typeof questions.$inferSelect;
-export type NewQuestion = typeof questions.$inferInsert;
-export type Result = typeof results.$inferSelect;
-export type NewResult = typeof results.$inferInsert;
+export type TTest = typeof tests.$inferSelect;
+export type TNewTest = typeof tests.$inferInsert;
+export type TQuestion = typeof questions.$inferSelect;
+export type TNewQuestion = typeof questions.$inferInsert;
+export type TResult = typeof results.$inferSelect;
+export type TNewResult = typeof results.$inferInsert;
+export type TAnswer =
+  | { type: "multiple"; answer: string[] }
+  | { type: "single" | "open"; answer: string };
 
 // TODO: check if answer in options
 const questionSchema = z.discriminatedUnion("type", [
