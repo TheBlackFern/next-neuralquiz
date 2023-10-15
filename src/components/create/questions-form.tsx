@@ -97,14 +97,15 @@ const questionsInitial: FormQuestion[] = [
 
 type FormQuestion = z.infer<typeof questionsSchema>["questions"][number];
 
-export function QuestionsForm({
-  test,
-}: {
+type QuestionsFormProps = {
   test: {
     topic: string;
     description?: string | undefined;
   };
-}) {
+  resetTestForm: () => void;
+};
+
+export function QuestionsForm({ test, resetTestForm }: QuestionsFormProps) {
   const [collapsed, setCollapsed] = React.useState<boolean[]>([false]);
   // TODO: rewrite with form.setValue!
   const [answers, setAnswers] = React.useState<string[][]>([["4"]]);
@@ -127,6 +128,7 @@ export function QuestionsForm({
     await createTestWithQuestions(values.questions, test);
     // console.log(values.questions);
     form.reset();
+    resetTestForm();
   }
 
   function removeQuestion(indexToRemove: number) {
@@ -156,6 +158,7 @@ export function QuestionsForm({
             >
               <div className="flex items-center justify-between w-full pt-1">
                 <Button
+                  type="button"
                   variant={"ghost"}
                   onClick={() => {
                     setCollapsed((prev) => {
@@ -175,6 +178,7 @@ export function QuestionsForm({
                   </p>
                 )}
                 <Button
+                  type="button"
                   variant={"ghost"}
                   onClick={() => removeQuestion(index)}
                   className={"h-8 w-8 p-0 -mr-3"}

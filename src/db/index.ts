@@ -3,6 +3,8 @@ import { Pool } from "pg";
 import { drizzle } from "drizzle-orm/node-postgres";
 import { eq } from "drizzle-orm";
 import { NewQuestion, NewTest, questions, tests } from "./schema";
+import { getErrorMessage } from "@/lib/utils";
+import { revalidatePath } from "next/cache";
 
 const connectionString = process.env.DATABASE_URL!;
 const pool = new Pool({ connectionString });
@@ -50,12 +52,17 @@ export async function createTestWithQuestions(
   newQuestions: Omit<NewQuestion, "test">[],
   newTest: NewTest
 ) {
-  await db.transaction(async (tx) => {
-    const insertedTest = await tx.insert(tests).values(newTest).returning();
-    const newQuestionsWithTest = newQuestions.map((question) => ({
-      ...question,
-      test: insertedTest[0].id,
-    }));
-    await tx.insert(questions).values(newQuestionsWithTest);
-  });
+  try {
+    await db.transaction(async (tx) => {
+      const insertedTest = await tx.insert(tests).values(newTest).returning();
+      const newQuestionsWithTest = newQuestions.map((question) => ({
+        ...question,
+        test: insertedTest[0].id,
+      }));
+      await tx.insert(questions).values(newQuestionsWithTest);
+    });
+    revalidatePath("/tests");
+  } catch (error) {
+    throw new Error(`Failed to create a Test: ${getErrorMessage(error)}`);
+  }
 }

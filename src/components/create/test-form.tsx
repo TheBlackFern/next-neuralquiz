@@ -44,6 +44,12 @@ export function TestForm() {
     setTest(values);
   }
 
+  function resetTestForm() {
+    setTest(null);
+    setShowQuestionsForm(false);
+    form.reset();
+  }
+
   return (
     <>
       <Form {...form}>
@@ -91,7 +97,9 @@ export function TestForm() {
           {!showQuestionsForm && <Button type="submit">Add questions</Button>}
         </form>
       </Form>
-      {showQuestionsForm && <QuestionsForm test={test!} />}
+      {showQuestionsForm && (
+        <QuestionsForm test={test!} resetTestForm={resetTestForm} />
+      )}
     </>
   );
 }
