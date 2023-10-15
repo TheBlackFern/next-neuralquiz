@@ -2,7 +2,14 @@
 import { Pool } from "pg";
 import { drizzle } from "drizzle-orm/node-postgres";
 import { eq } from "drizzle-orm";
-import { NewQuestion, NewTest, questions, tests } from "./schema";
+import {
+  NewQuestion,
+  NewResult,
+  NewTest,
+  questions,
+  results,
+  tests,
+} from "./schema";
 import { getErrorMessage } from "@/lib/utils";
 import { revalidatePath } from "next/cache";
 
@@ -63,6 +70,18 @@ export async function createTestWithQuestions(
       await tx.insert(questions).values(newQuestionsWithTest);
     });
     revalidatePath("/tests");
+  } catch (error) {
+    return {
+      error: getErrorMessage(error),
+    };
+  }
+}
+
+export async function createResults(result: NewResult) {
+  try {
+    // throw new Error("Test");
+    await db.insert(results).values(result).returning();
+    // revalidatePath("/tests");
   } catch (error) {
     return {
       error: getErrorMessage(error),

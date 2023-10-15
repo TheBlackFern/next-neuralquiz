@@ -1,4 +1,4 @@
-import { integer, pgTable, serial, text } from "drizzle-orm/pg-core";
+import { pgTable, integer, serial, text, json } from "drizzle-orm/pg-core";
 import { z } from "zod";
 
 export const tests = pgTable("tests", {
@@ -17,6 +17,13 @@ export const questions = pgTable("questions", {
   type: text("type").notNull(),
 });
 
+export const results = pgTable("results", {
+  id: serial("id").primaryKey(),
+  testtaker: text("testtaker"),
+  answers: json("answers"),
+  test: integer("test").references(() => tests.id),
+});
+
 // export const testsRelations = relations(tests, ({ many }) => ({
 //   questions: many(questions),
 // }));
@@ -32,6 +39,8 @@ export type Test = typeof tests.$inferSelect;
 export type NewTest = typeof tests.$inferInsert;
 export type Question = typeof questions.$inferSelect;
 export type NewQuestion = typeof questions.$inferInsert;
+export type Result = typeof results.$inferSelect;
+export type NewResult = typeof results.$inferInsert;
 
 // TODO: check if answer in options
 const questionSchema = z.discriminatedUnion("type", [
