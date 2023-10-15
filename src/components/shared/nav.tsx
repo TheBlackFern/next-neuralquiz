@@ -1,8 +1,10 @@
 import Link from "next/link";
 import { ThemeToggle } from "../theme/theme-toggle";
-import { buttonVariants } from "../ui/button";
 import { BrainCircuit } from "lucide-react";
+
 import { cn } from "@/lib/utils";
+
+import { buttonVariants } from "../ui/button";
 
 const Nav = () => {
   return (

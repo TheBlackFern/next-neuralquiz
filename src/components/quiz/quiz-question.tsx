@@ -1,14 +1,11 @@
 import Image from "next/image";
-
-import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
-import { Label } from "../ui/label";
-import { Button } from "../ui/button";
-
-import { cn } from "@/lib/utils";
-import { TQuestion, TAnswer } from "@/db/schema";
 import QuizInputSingle from "./quiz-input-single";
 import QuizInputMultiple from "./quiz-input-multiple";
 import QuizInputOpen from "./quiz-input-open";
+
+import { cn } from "@/lib/utils";
+
+import { TQuestion, TAnswer } from "@/db/schema";
 
 type QuizQuestionProps = {
   question: TQuestion;

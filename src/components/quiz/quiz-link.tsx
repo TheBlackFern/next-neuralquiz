@@ -1,8 +1,10 @@
 import React from "react";
 import Link from "next/link";
-import { buttonVariants } from "../ui/button";
 import { ChevronsRight } from "lucide-react";
+
 import { cn } from "@/lib/utils";
+
+import { buttonVariants } from "../ui/button";
 import { TTest } from "@/db/schema";
 
 type QuizLinkProps = {

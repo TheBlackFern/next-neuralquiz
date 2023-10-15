@@ -1,8 +1,7 @@
-import { ReactNode } from "react";
+import React from "react";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
@@ -42,7 +41,7 @@ function calculateCorrectness(
 type QuizResultsProps = {
   correctAnswers: Array<string[] | null>;
   answers: TAnswer[];
-  children?: ReactNode;
+  children?: React.ReactNode;
 };
 
 const QuizResults = ({
