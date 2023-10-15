@@ -29,7 +29,7 @@ const testSchema = z.object({
 export function TestForm() {
   const [showQuestionsForm, setShowQuestionsForm] = React.useState(false);
   const [test, setTest] = React.useState<z.infer<typeof testSchema> | null>(
-    null
+    null,
   );
   const form = useForm<z.infer<typeof testSchema>>({
     resolver: zodResolver(testSchema),
@@ -55,7 +55,7 @@ export function TestForm() {
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="space-y-4 min-w-[300px] max-w-[1000px]"
+          className="min-w-[300px] max-w-[1000px] space-y-4"
         >
           <FormField
             control={form.control}

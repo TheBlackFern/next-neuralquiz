@@ -5,18 +5,18 @@ import { cn } from "@/lib/utils";
 
 async function Page() {
   return (
-    <div className="flex flex-col gap-5 items-center mt-12">
-      <h1 className="text-6xl text-center font-bold">Test Away!</h1>
-      <p className="text-xl text-muted-foreground mb-5 text-center [text-wrap:balance]">
+    <div className="mt-12 flex flex-col items-center gap-5">
+      <h1 className="text-center text-6xl font-bold">Test Away!</h1>
+      <p className="mb-5 text-center text-xl text-muted-foreground [text-wrap:balance]">
         Select a quiz you want to take and try your best to answer every
         question.
       </p>
-      <div className="flex flex-row gap-5 items-center justify-center w-full">
+      <div className="flex w-full flex-row items-center justify-center gap-5">
         <Link
           href="/tests"
           className={cn(
             buttonVariants({ variant: "default" }),
-            "w-32 px-2.5 py-1.5 h-12"
+            "h-12 w-32 px-2.5 py-1.5",
           )}
         >
           Quiz Me!
@@ -25,7 +25,7 @@ async function Page() {
           href="/create"
           className={cn(
             buttonVariants({ variant: "outline" }),
-            "w-32 gap-1 px-2.5 py-1.5 h-12"
+            "h-12 w-32 gap-1 px-2.5 py-1.5",
           )}
         >
           <Plus size={20} /> Create

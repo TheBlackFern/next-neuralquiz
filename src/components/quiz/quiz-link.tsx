@@ -15,21 +15,21 @@ const QuizLink = ({ test }: QuizLinkProps) => {
       href={`/test/${test.id}`}
       className={cn(
         buttonVariants({ variant: "secondary" }),
-        "group flex flex-row gap-3 h-auto justify-start px-5 py-3 w-[90vw] sm:w-[70vw] max-w-[600px]"
+        "group flex h-auto w-[90vw] max-w-[600px] flex-row justify-start gap-3 px-5 py-3 sm:w-[70vw]",
       )}
     >
       <p className="text-start">
-        <span className="line-clamp-1 text-base sm:text-lg break-all">
+        <span className="line-clamp-1 break-all text-base sm:text-lg">
           {test.topic}
         </span>
-        <span className="text-muted-foreground text-[12px] sm:text-base line-clamp-1 break-all">
+        <span className="line-clamp-1 break-all text-[12px] text-muted-foreground sm:text-base">
           {test.description}
         </span>
       </p>
       <ChevronsRight
         width={24}
         height={48}
-        className="hidden sm:block group-hover:opacity-100 ml-auto opacity-0 transition-all duration-200"
+        className="ml-auto hidden opacity-0 transition-all duration-200 group-hover:opacity-100 sm:block"
       />
     </Link>
   );

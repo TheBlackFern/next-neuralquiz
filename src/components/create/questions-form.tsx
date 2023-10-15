@@ -98,18 +98,18 @@ export function QuestionsForm({ test, resetTestForm }: QuestionsFormProps) {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="space-y-[6px] min-w-[300px]"
+        className="min-w-[300px] space-y-[6px]"
       >
-        <div className="grid grid-cols-1 gap-3 place-content-center">
+        <div className="grid grid-cols-1 place-content-center gap-3">
           {fields.map((field, index) => (
             <m.div
               key={index}
               className={cn(
-                "relative rounded-lg border h-auto space-y-[8px] pb-2 px-4 w-full",
-                collapsed[index] && "h-10"
+                "relative h-auto w-full space-y-[8px] rounded-lg border px-4 pb-2",
+                collapsed[index] && "h-10",
               )}
             >
-              <div className="flex items-center justify-between w-full pt-1">
+              <div className="flex w-full items-center justify-between pt-1">
                 <Button
                   type="button"
                   variant={"ghost"}
@@ -120,7 +120,7 @@ export function QuestionsForm({ test, resetTestForm }: QuestionsFormProps) {
                       return upd;
                     });
                   }}
-                  className={"h-8 w-8 p-0 -ml-3"}
+                  className={"-ml-3 h-8 w-8 p-0"}
                 >
                   <ChevronDown size={20} />
                 </Button>
@@ -134,7 +134,7 @@ export function QuestionsForm({ test, resetTestForm }: QuestionsFormProps) {
                   type="button"
                   variant={"ghost"}
                   onClick={() => removeQuestion(index)}
-                  className={"h-8 w-8 p-0 -mr-3"}
+                  className={"-mr-3 h-8 w-8 p-0"}
                 >
                   <X size={20} />
                 </Button>
@@ -244,7 +244,7 @@ export function QuestionsForm({ test, resetTestForm }: QuestionsFormProps) {
                                   setOptions(newOptions);
                                   form.setValue(
                                     `questions.${index}.options`,
-                                    newOptions[index] as [string, ...string[]]
+                                    newOptions[index] as [string, ...string[]],
                                   );
                                   return setOptions;
                                 }}
@@ -277,7 +277,7 @@ export function QuestionsForm({ test, resetTestForm }: QuestionsFormProps) {
                                   setAnswers(newOptions);
                                   form.setValue(
                                     `questions.${index}.answer`,
-                                    newOptions[index] as [string, ...string[]]
+                                    newOptions[index] as [string, ...string[]],
                                   );
                                   return setOptions;
                                 }}
@@ -305,7 +305,7 @@ export function QuestionsForm({ test, resetTestForm }: QuestionsFormProps) {
                                   setOptions(newOptions);
                                   form.setValue(
                                     `questions.${index}.options`,
-                                    newOptions[index] as [string, ...string[]]
+                                    newOptions[index] as [string, ...string[]],
                                   );
                                   return setOptions;
                                 }}
@@ -322,7 +322,7 @@ export function QuestionsForm({ test, resetTestForm }: QuestionsFormProps) {
             </m.div>
           ))}
         </div>
-        <p className="text-destructive text-center">
+        <p className="text-center text-destructive">
           🚧 Image upload is a Work in Progress, coming soon... 🚧
         </p>
         <div className="flex justify-between">

@@ -24,14 +24,14 @@ function ratingPhrase(rating: number) {
 
 function calculateCorrectness(
   answers: TAnswer[],
-  correctAnswers: Array<string | string[] | null>
+  correctAnswers: Array<string | string[] | null>,
 ) {
   return answers.reduce<(boolean | null)[]>((isCorrect, answer, index) => {
     switch (answer.type) {
       case "multiple":
         isCorrect.push(
           answer.answer.sort().join(",") ===
-            (correctAnswers[index] as string[]).sort().join(",")
+            (correctAnswers[index] as string[]).sort().join(","),
         );
         break;
       case "open":
@@ -59,7 +59,7 @@ const QuizResults = ({
   // const total = correctAnswers.length;
 
   return (
-    <Card className="w-fit flex flex-col text-center items-center">
+    <Card className="flex w-fit flex-col items-center text-center">
       <CardHeader>
         <CardTitle>Results</CardTitle>
         {/* <CardDescription>{ratingPhrase(score / total)}</CardDescription> */}
@@ -71,10 +71,10 @@ const QuizResults = ({
           </p>
         </div> */}
         <div className="grid grid-cols-2 items-center gap-2 p-3">
-          <p className="font-medium text-xs sm:text-sm text-muted-foreground">
+          <p className="text-xs font-medium text-muted-foreground sm:text-sm">
             Your answer
           </p>
-          <p className="font-medium text-xs sm:text-sm text-muted-foreground">
+          <p className="text-xs font-medium text-muted-foreground sm:text-sm">
             Correct answer
           </p>
           {answers.current.map((answer, index) => {

@@ -57,7 +57,7 @@ export type TQuestions = Awaited<ReturnType<typeof fetchQuestionsByTestID>>;
 
 export async function createTestWithQuestions(
   newQuestions: Omit<NewQuestion, "test">[],
-  newTest: NewTest
+  newTest: NewTest,
 ) {
   try {
     // throw new Error("Test");

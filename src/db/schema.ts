@@ -57,7 +57,7 @@ const questionSchema = z.discriminatedUnion("type", [
         .min(1, {
           message: "Answer should be at least 1 character long.",
         })
-        .max(100, { message: "Answer is too long." })
+        .max(100, { message: "Answer is too long." }),
     ),
     options: z
       .array(z.string())
@@ -84,7 +84,7 @@ const questionSchema = z.discriminatedUnion("type", [
         .min(1, {
           message: "Answer should be at least 1 character long.",
         })
-        .max(100, { message: "Answer is too long." })
+        .max(100, { message: "Answer is too long." }),
     ),
     options: z
       .array(z.string())

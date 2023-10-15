@@ -41,21 +41,21 @@ function calculateInitial(questions: TQuestions) {
 const Quiz = ({ questions }: QuizProps) => {
   const initialAnswers = React.useMemo(
     () => calculateInitial(questions),
-    [questions]
+    [questions],
   );
   const answers = React.useRef<Array<TAnswer>>(initialAnswers);
   const [step, setStep] = React.useState(0);
 
   return (
-    <div className="flex flex-col items-center gap-2 min-h-screen w-[300px] md:w-[600px] overflow-x-hidden">
-      <div className="max-xs:max-w-[300px] w-fit h-auto flex flex-row flex-wrap justify-center gap-2 pt-1">
+    <div className="flex min-h-screen w-[300px] flex-col items-center gap-2 overflow-x-hidden md:w-[600px]">
+      <div className="max-xs:max-w-[300px] flex h-auto w-fit flex-row flex-wrap justify-center gap-2 pt-1">
         {questions.map((question, index) => (
           <Button
             variant={"outline"}
             className={cn(
               step === index &&
                 "bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground",
-              "h-8 w-8 text-sm"
+              "h-8 w-8 text-sm",
             )}
             onClick={() => setStep(index)}
             key={question.id}
@@ -64,14 +64,14 @@ const Quiz = ({ questions }: QuizProps) => {
           </Button>
         ))}
       </div>
-      <div className="w-full min-h-screen relative">
+      <div className="relative min-h-screen w-full">
         {questions.map((question, index) => (
           <m.div
             className={cn(
-              "flex top-0 left-0 right-0 flex-col justify-center items-center gap-3",
+              "left-0 right-0 top-0 flex flex-col items-center justify-center gap-3",
               {
                 absolute: index !== 0,
-              }
+              },
             )}
             animate={{
               translateX: `${-(step - index) * 650}px`,
@@ -111,7 +111,7 @@ const Quiz = ({ questions }: QuizProps) => {
           </m.div>
         ))}
         <m.div
-          className="flex absolute top-0 left-0 right-0 flex-col justify-center items-center gap-3"
+          className="absolute left-0 right-0 top-0 flex flex-col items-center justify-center gap-3"
           animate={{
             translateX: `${-(step - questions.length) * 600}px`,
           }}
@@ -128,7 +128,7 @@ const Quiz = ({ questions }: QuizProps) => {
                 acc.push(question.answer);
                 return acc;
               },
-              []
+              [],
             )}
             answers={answers}
             // TODO: calculate?

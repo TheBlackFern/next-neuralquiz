@@ -3,10 +3,10 @@ const Background = () => {
     <>
       <div
         aria-hidden="true"
-        className="absolute z-[-1] blur-3xl left-1/2 -translate-x-1/2 top-[calc(40px+10%)] rotate-[30deg]"
+        className="absolute left-1/2 top-[calc(40px+10%)] z-[-1] -translate-x-1/2 rotate-[30deg] blur-3xl"
       >
         <div
-          className="aspect-[1155/678] w-[50vw] max-w-[500px] bg-gradient-to-tr from-orange-400 to-red-800 dark:invert opacity-30 sm:left-0"
+          className="aspect-[1155/678] w-[50vw] max-w-[500px] bg-gradient-to-tr from-orange-400 to-red-800 opacity-30 dark:invert sm:left-0"
           style={{
             clipPath:
               "polygon(79% 16%, 80% 16%, 87% 31%, 76% 74%, 20% 78%, 5% 61%, 5% 31%, 10% 10%, 20% 12%, 28% 26%, 24% 49%, 44% 54%, 54% 26%, 56% 4%)",

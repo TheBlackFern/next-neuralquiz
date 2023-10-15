@@ -82,6 +82,6 @@
     scrollbar-gutter: stable;
   }
   .required {
-    @apply relative before:content-['*'] before:absolute before:-left-2 before:top-0;
+    @apply relative before:absolute before:-left-2 before:top-0 before:content-['*'];
   }
 }
