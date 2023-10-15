@@ -4,7 +4,7 @@ import React from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 
-import { Button, buttonVariants } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -28,63 +28,8 @@ import {
   SelectValue,
 } from "../ui/select";
 import { cn } from "@/lib/utils";
-
-const questionSchema = z.discriminatedUnion("type", [
-  z.object({
-    question: z
-      .string()
-      .min(2, { message: "Topic should be at least 2 characters long." })
-      .max(50, { message: "Topic is too long." }),
-    image: z.string().url().optional(),
-    type: z.literal("multiple"),
-    answer: z.array(
-      z
-        .string()
-        .min(1, {
-          message: "Answer should be at least 1 character long.",
-        })
-        .max(100, { message: "Answer is too long." })
-    ),
-    options: z
-      .array(z.string())
-      .min(2, { message: "There should be at least 2 option." }),
-  }),
-  z.object({
-    question: z
-      .string()
-      .min(2, { message: "Topic should be at least 2 characters long." })
-      .max(50, { message: "Topic is too long." }),
-    image: z.string().url().optional(),
-    type: z.literal("open"),
-  }),
-  z.object({
-    question: z
-      .string()
-      .min(2, { message: "Topic should be at least 2 characters long." })
-      .max(50, { message: "Topic is too long." }),
-    image: z.string().url().optional(),
-    type: z.literal("single"),
-    answer: z.array(
-      z
-        .string()
-        .min(1, {
-          message: "Answer should be at least 1 character long.",
-        })
-        .max(100, { message: "Answer is too long." })
-    ),
-    options: z
-      .array(z.string())
-      .min(2, { message: "There should be at least 2 option." }),
-  }),
-]);
-
-const questionsSchema = z.object({
-  questions: z
-    .array(questionSchema)
-    .min(1, { message: "The test should have at least one question." }),
-});
-
-// TODO: check if answer in options
+import { useToast } from "../ui/use-toast";
+import { questionsSchema } from "@/db/schema";
 
 const questionsInitial: FormQuestion[] = [
   {
@@ -106,6 +51,7 @@ type QuestionsFormProps = {
 };
 
 export function QuestionsForm({ test, resetTestForm }: QuestionsFormProps) {
+  const { toast } = useToast();
   const [collapsed, setCollapsed] = React.useState<boolean[]>([false]);
   // TODO: rewrite with form.setValue!
   const [answers, setAnswers] = React.useState<string[][]>([["4"]]);
@@ -125,7 +71,14 @@ export function QuestionsForm({ test, resetTestForm }: QuestionsFormProps) {
   // const isSubmittable = form.formState.isDirty && form.formState.isValid;
 
   async function onSubmit(values: z.infer<typeof questionsSchema>) {
-    await createTestWithQuestions(values.questions, test);
+    const res = await createTestWithQuestions(values.questions, test);
+    if (res?.error) {
+      toast({
+        title: "Something went wrong!",
+        description:
+          "Failed to create a test: " + res.error + ". Please, try again.",
+      });
+    }
     // console.log(values.questions);
     form.reset();
     resetTestForm();

@@ -53,6 +53,7 @@ export async function createTestWithQuestions(
   newTest: NewTest
 ) {
   try {
+    // throw new Error("Test");
     await db.transaction(async (tx) => {
       const insertedTest = await tx.insert(tests).values(newTest).returning();
       const newQuestionsWithTest = newQuestions.map((question) => ({
@@ -63,6 +64,8 @@ export async function createTestWithQuestions(
     });
     revalidatePath("/tests");
   } catch (error) {
-    throw new Error(`Failed to create a Test: ${getErrorMessage(error)}`);
+    return {
+      error: getErrorMessage(error),
+    };
   }
 }
