@@ -30,13 +30,13 @@ const QuizQuestion = (props: QuizQuestionProps) => {
   return (
     <section
       className={cn(
-        "flex h-auto w-[300px] flex-row items-center rounded-lg border bg-card text-card-foreground shadow-sm",
+        "relative flex h-auto w-[300px] flex-row items-center rounded-lg border bg-card p-3 text-card-foreground shadow-sm",
         question.image && "md:w-[600px]",
       )}
     >
       <div className="w-full max-w-[300px]">
         <div className="flex flex-col space-y-1.5 p-6 pb-3">
-          <h2 className="text-2xl font-semibold leading-none tracking-tight">
+          <h2 className="text-base font-semibold leading-none tracking-tight">
             Question {step + 1}
           </h2>
           <p className="text-muted-foregrounds text-sm">{question.question}</p>

@@ -25,7 +25,7 @@ const QuizInputSingle = ({
     >
       {question.options &&
         question.options.map((option, optionIndex) => (
-          <div className="flex items-center gap-2" key={optionIndex}>
+          <div className="flex items-center gap-3" key={optionIndex}>
             <RadioGroupItem
               disabled={currentStep !== step}
               value={option}
