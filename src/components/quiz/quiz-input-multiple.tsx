@@ -40,7 +40,7 @@ const QuizInputMultiple = ({
             />
             <Label
               htmlFor={`o${optionIndex}`}
-              className={cn("w-full text-sm font-normal")}
+              className={cn("w-full text-base font-normal")}
             >
               {option}
             </Label>
