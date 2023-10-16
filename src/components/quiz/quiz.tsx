@@ -11,6 +11,8 @@ import { cn, getErrorMessage } from "@/lib/utils";
 
 import { TQuestions, createResults } from "@/db";
 import { TAnswer } from "@/db/schema";
+import { Bookmark, Star } from "lucide-react";
+import { useTheme } from "next-themes";
 
 function calculateInitial(questions: TQuestions) {
   const initialAnswers: TAnswer[] = [];
@@ -40,14 +42,36 @@ type QuizProps = {
 };
 
 const Quiz = ({ questions, testID }: QuizProps) => {
+  const { theme } = useTheme();
   const initialAnswers = React.useMemo(
     () => calculateInitial(questions),
     [questions],
   );
   const answers = React.useRef<Array<TAnswer>>(initialAnswers);
+  const [isAnswered, setIsAnswered] = React.useState<boolean[]>(
+    Array(questions.length).fill(false),
+  );
+  const [isBookmarked, setIsBookmarked] = React.useState<boolean[]>(
+    Array(questions.length).fill(false),
+  );
   const [step, setStep] = React.useState(0);
   const { toast } = useToast();
   const router = useRouter();
+
+  function handleBookmarked(index: number) {
+    setIsBookmarked((prev) => {
+      const upd = [...prev];
+      upd[index] = !upd[index];
+      return upd;
+    });
+  }
+  function handleGivenAnswer(index: number) {
+    setIsAnswered((prev) => {
+      const upd = [...prev];
+      upd[index] = true;
+      return upd;
+    });
+  }
 
   async function handleSubmit() {
     try {
@@ -84,7 +108,7 @@ const Quiz = ({ questions, testID }: QuizProps) => {
   }
 
   return (
-    <div className="flex min-h-screen w-[300px] flex-col items-center gap-2 overflow-x-hidden md:w-[600px]">
+    <div className="flex min-h-screen w-[300px] flex-col items-center gap-4 overflow-x-hidden md:w-[600px]">
       <div className="mt-2 space-x-3">
         <Button className="" onClick={handleSubmit}>
           Submit
@@ -98,25 +122,39 @@ const Quiz = ({ questions, testID }: QuizProps) => {
       </div>
       <div className="max-xs:max-w-[300px] flex h-auto w-fit flex-row flex-wrap justify-center gap-2 pt-1">
         {questions.map((question, index) => (
-          <Button
-            variant={"outline"}
-            className={cn(
-              step === index &&
-                "bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground",
-              "h-8 w-8 text-sm",
-            )}
-            onClick={() => setStep(index)}
-            key={question.id}
-          >
-            {index + 1}
-          </Button>
+          <>
+            <Button
+              variant={"outline"}
+              className={cn(
+                "relative h-10 w-10 text-sm",
+                step === index &&
+                  "after:absolute after:-bottom-2 after:left-1/2 after:h-1 after:w-7 after:-translate-x-1/2 after:bg-primary after:content-['']",
+                !isAnswered[index] &&
+                  "bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground",
+              )}
+              onClick={() => setStep(index)}
+              key={question.id}
+            >
+              <>
+                {isBookmarked[index] && (
+                  <Bookmark
+                    className={cn("absolute -top-0.5 right-0.5")}
+                    size={14}
+                    strokeWidth={1}
+                    fill="currentColor"
+                  />
+                )}
+                {index + 1}
+              </>
+            </Button>
+          </>
         ))}
       </div>
       <div className="relative min-h-screen w-full">
         {questions.map((question, index) => (
           <m.div
             className={cn(
-              "left-0 right-0 top-0 flex flex-col items-center justify-center gap-3",
+              "relative left-0 right-0 top-0 flex flex-col items-center justify-center gap-3",
               {
                 absolute: index !== 0,
               },
@@ -137,9 +175,30 @@ const Quiz = ({ questions, testID }: QuizProps) => {
               step={index}
               answers={answers}
               question={question}
+              handleGivenAnswer={handleGivenAnswer}
             >
+              <Button
+                variant="ghost"
+                className="absolute left-0.5 top-1 h-6 w-6 p-0"
+                onClick={() => {
+                  handleBookmarked(index);
+                }}
+              >
+                <Star
+                  size={18}
+                  className={cn(
+                    isBookmarked[index] ? "text-primary" : "text-background",
+                  )}
+                  strokeWidth={1}
+                  stroke={theme === "dark" ? "white" : "black"}
+                  fill="currentColor"
+                />
+              </Button>
               {index === questions.length - 1 && (
-                <Button className="" onClick={handleSubmit}>
+                <Button
+                  disabled={step !== questions.length - 1}
+                  onClick={handleSubmit}
+                >
                   Submit
                 </Button>
               )}

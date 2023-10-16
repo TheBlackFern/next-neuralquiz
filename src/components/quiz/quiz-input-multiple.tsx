@@ -12,8 +12,10 @@ const QuizInputMultiple = ({
   currentStep,
   step,
   answers,
+  handleGivenAnswer,
 }: QuizInputProps) => {
   function handleChecked(checked: CheckedState, option: string) {
+    handleGivenAnswer(step);
     const prevVal = answers.current[step];
     // had to create a new value and make this check for TS
     // to understand that yeah this IS the correct type
@@ -38,7 +40,7 @@ const QuizInputMultiple = ({
             />
             <Label
               htmlFor={`o${optionIndex}`}
-              className={cn("w-full text-sm font-normal")}
+              className={cn("w-full text-base font-normal")}
             >
               {option}
             </Label>

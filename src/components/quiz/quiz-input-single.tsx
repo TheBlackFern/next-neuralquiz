@@ -11,10 +11,12 @@ const QuizInputSingle = ({
   currentStep,
   step,
   answers,
+  handleGivenAnswer,
 }: QuizInputProps) => {
   return (
     <RadioGroup
       onValueChange={(value) => {
+        handleGivenAnswer(step);
         answers.current[step] = {
           answer: value,
           type: "single",
@@ -23,7 +25,7 @@ const QuizInputSingle = ({
     >
       {question.options &&
         question.options.map((option, optionIndex) => (
-          <div className="flex items-center gap-2" key={optionIndex}>
+          <div className="flex items-center gap-3" key={optionIndex}>
             <RadioGroupItem
               disabled={currentStep !== step}
               value={option}
@@ -31,7 +33,7 @@ const QuizInputSingle = ({
             />
             <Label
               htmlFor={`r${optionIndex}`}
-              className={cn(" w-full text-sm font-normal")}
+              className={cn(" w-full text-base font-normal")}
             >
               {option}
             </Label>

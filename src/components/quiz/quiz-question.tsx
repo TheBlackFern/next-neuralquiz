@@ -12,6 +12,7 @@ type QuizQuestionProps = {
   currentStep: number;
   step: number;
   answers: React.MutableRefObject<TAnswer[]>;
+  handleGivenAnswer(index: number): void;
   children: React.ReactNode;
 };
 
@@ -20,24 +21,27 @@ export type QuizInputProps = {
   currentStep: number;
   step: number;
   answers: React.MutableRefObject<TAnswer[]>;
+  handleGivenAnswer(index: number): void;
 };
 
 const QuizQuestion = (props: QuizQuestionProps) => {
-  const { question, currentStep, step, answers, children } = props;
+  const { question, step, answers, handleGivenAnswer, children } = props;
 
   return (
     <section
       className={cn(
-        "flex h-auto w-[300px] flex-row items-center rounded-lg border bg-card text-card-foreground shadow-sm",
+        "relative flex h-auto w-[300px] flex-row items-center rounded-lg border bg-card p-3 text-card-foreground shadow-sm",
         question.image && "md:w-[600px]",
       )}
     >
       <div className="w-full max-w-[300px]">
         <div className="flex flex-col space-y-1.5 p-6 pb-3">
-          <h2 className="text-2xl font-semibold leading-none tracking-tight">
+          <h2 className="text-lg font-semibold leading-none tracking-tight">
             Question {step + 1}
           </h2>
-          <p className="text-muted-foregrounds text-sm">{question.question}</p>
+          <p className="text-muted-foregrounds text-base">
+            {question.question}
+          </p>
           {question.image && (
             <div className="relative h-[250px] w-[250px] shrink-0 self-center p-6 md:hidden">
               <Image
