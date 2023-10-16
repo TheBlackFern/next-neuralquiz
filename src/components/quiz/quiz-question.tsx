@@ -12,6 +12,7 @@ type QuizQuestionProps = {
   currentStep: number;
   step: number;
   answers: React.MutableRefObject<TAnswer[]>;
+  handleGivenAnswer(index: number): void;
   children: React.ReactNode;
 };
 
@@ -20,10 +21,11 @@ export type QuizInputProps = {
   currentStep: number;
   step: number;
   answers: React.MutableRefObject<TAnswer[]>;
+  handleGivenAnswer(index: number): void;
 };
 
 const QuizQuestion = (props: QuizQuestionProps) => {
-  const { question, currentStep, step, answers, children } = props;
+  const { question, step, answers, handleGivenAnswer, children } = props;
 
   return (
     <section

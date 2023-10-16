@@ -45,9 +45,20 @@ const Quiz = ({ questions, testID }: QuizProps) => {
     [questions],
   );
   const answers = React.useRef<Array<TAnswer>>(initialAnswers);
+  const [wasAnswerGiven, setWasAnswerGiven] = React.useState<boolean[]>(
+    Array(questions.length).fill(false),
+  );
   const [step, setStep] = React.useState(0);
   const { toast } = useToast();
   const router = useRouter();
+
+  function handleGivenAnswer(index: number) {
+    setWasAnswerGiven((prev) => {
+      const upd = [...prev];
+      upd[index] = true;
+      return upd;
+    });
+  }
 
   async function handleSubmit() {
     try {
@@ -101,9 +112,11 @@ const Quiz = ({ questions, testID }: QuizProps) => {
           <Button
             variant={"outline"}
             className={cn(
+              "relative h-8 w-8 text-sm",
               step === index &&
+                "after:absolute after:-bottom-1 after:left-1/2 after:h-0.5 after:w-7 after:-translate-x-1/2 after:bg-primary after:content-['']",
+              !wasAnswerGiven[index] &&
                 "bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground",
-              "h-8 w-8 text-sm",
             )}
             onClick={() => setStep(index)}
             key={question.id}
@@ -137,9 +150,13 @@ const Quiz = ({ questions, testID }: QuizProps) => {
               step={index}
               answers={answers}
               question={question}
+              handleGivenAnswer={handleGivenAnswer}
             >
               {index === questions.length - 1 && (
-                <Button className="" onClick={handleSubmit}>
+                <Button
+                  disabled={step !== questions.length - 1}
+                  onClick={handleSubmit}
+                >
                   Submit
                 </Button>
               )}

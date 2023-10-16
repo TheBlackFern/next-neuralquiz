@@ -11,10 +11,12 @@ const QuizInputSingle = ({
   currentStep,
   step,
   answers,
+  handleGivenAnswer,
 }: QuizInputProps) => {
   return (
     <RadioGroup
       onValueChange={(value) => {
+        handleGivenAnswer(step);
         answers.current[step] = {
           answer: value,
           type: "single",
