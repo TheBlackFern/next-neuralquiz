@@ -47,6 +47,8 @@ export type TAnswer =
   | { type: "multiple"; answer: string[] }
   | { type: "single" | "open"; answer: string };
 
+const emptyStringToUndefined = z.literal("").transform(() => undefined);
+
 // TODO: check if answer in options
 const questionSchema = z.discriminatedUnion("type", [
   z.object({
@@ -54,7 +56,7 @@ const questionSchema = z.discriminatedUnion("type", [
       .string()
       .min(2, { message: "Question should be at least 2 characters long." })
       .max(50, { message: "Question is too long." }),
-    image: z.string().url().optional(),
+    image: z.string().url().optional().or(emptyStringToUndefined),
     type: z.literal("multiple"),
     answer: z.array(
       z
@@ -73,7 +75,7 @@ const questionSchema = z.discriminatedUnion("type", [
       .string()
       .min(2, { message: "Question should be at least 2 characters long." })
       .max(50, { message: "Question is too long." }),
-    image: z.string().url().optional(),
+    image: z.string().url().optional().or(emptyStringToUndefined),
     type: z.literal("open"),
   }),
   z.object({
@@ -81,8 +83,10 @@ const questionSchema = z.discriminatedUnion("type", [
       .string()
       .min(2, { message: "Question should be at least 2 characters long." })
       .max(50, { message: "Question is too long." }),
-    image: z.string().url().optional(),
+    image: z.string().url().optional().or(emptyStringToUndefined),
     type: z.literal("single"),
+    // do not touch!
+    // even though we have one answer, it still should be cast to an array for db
     answer: z.array(
       z
         .string()

@@ -81,6 +81,16 @@ export function QuestionsForm({ test, resetTestForm }: QuestionsFormProps) {
       });
     }
     // console.log(values.questions);
+    // toast({
+    //   title: "Submitted questions",
+    //   description: (
+    //     <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+    //       <code className="text-white">
+    //         {JSON.stringify(values.questions, null, 2)}
+    //       </code>
+    //     </pre>
+    //   ),
+    // });
     form.reset();
     resetTestForm();
   }
@@ -226,8 +236,11 @@ export function QuestionsForm({ test, resetTestForm }: QuestionsFormProps) {
                             <FormLabel className="required">Answer</FormLabel>
                             <FormControl>
                               <Input
-                                placeholder="Type in the correct answer..."
                                 {...field}
+                                onChange={(e) => {
+                                  field.onChange([e.target.value]);
+                                }}
+                                placeholder="Type in the correct answer..."
                               />
                             </FormControl>
                             <FormMessage />
