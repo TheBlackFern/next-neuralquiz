@@ -52,8 +52,8 @@ const questionSchema = z.discriminatedUnion("type", [
   z.object({
     question: z
       .string()
-      .min(2, { message: "Topic should be at least 2 characters long." })
-      .max(50, { message: "Topic is too long." }),
+      .min(2, { message: "Question should be at least 2 characters long." })
+      .max(50, { message: "Question is too long." }),
     image: z.string().url().optional(),
     type: z.literal("multiple"),
     answer: z.array(
@@ -66,21 +66,21 @@ const questionSchema = z.discriminatedUnion("type", [
     ),
     options: z
       .array(z.string())
-      .min(2, { message: "There should be at least 2 option." }),
+      .min(2, { message: "There should be at least 2 options." }),
   }),
   z.object({
     question: z
       .string()
-      .min(2, { message: "Topic should be at least 2 characters long." })
-      .max(50, { message: "Topic is too long." }),
+      .min(2, { message: "Question should be at least 2 characters long." })
+      .max(50, { message: "Question is too long." }),
     image: z.string().url().optional(),
     type: z.literal("open"),
   }),
   z.object({
     question: z
       .string()
-      .min(2, { message: "Topic should be at least 2 characters long." })
-      .max(50, { message: "Topic is too long." }),
+      .min(2, { message: "Question should be at least 2 characters long." })
+      .max(50, { message: "Question is too long." }),
     image: z.string().url().optional(),
     type: z.literal("single"),
     answer: z.array(
@@ -93,7 +93,7 @@ const questionSchema = z.discriminatedUnion("type", [
     ),
     options: z
       .array(z.string())
-      .min(2, { message: "There should be at least 2 option." }),
+      .min(2, { message: "There should be at least 2 options." }),
   }),
 ]);
 

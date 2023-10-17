@@ -126,10 +126,17 @@ export function QuestionsForm({ test, resetTestForm }: QuestionsFormProps) {
                   <ChevronDown size={20} />
                 </Button>
                 {collapsed[index] && (
-                  <p className="text-muted-foreground">
-                    {form.watch(`questions.${index}.question`) ||
-                      "Empty question"}
-                  </p>
+                  <div className="relative flex max-w-[50%] justify-center">
+                    {form.getFieldState(`questions.${index}`).invalid && (
+                      <div className="absolute -left-7 top-0 h-6 w-6 rounded-md border bg-destructive text-center font-bold text-destructive-foreground">
+                        !
+                      </div>
+                    )}
+                    <p className="line-clamp-1 break-all text-muted-foreground">
+                      {form.watch(`questions.${index}.question`) ||
+                        "Empty question"}
+                    </p>
+                  </div>
                 )}
                 <Button
                   type="button"
