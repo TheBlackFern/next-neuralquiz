@@ -49,57 +49,85 @@ export type TAnswer =
 
 const emptyStringToUndefined = z.literal("").transform(() => undefined);
 
-// TODO: check if answer in options
-const questionSchema = z.discriminatedUnion("type", [
-  z.object({
-    question: z
+const openQuestionSchema = z.object({
+  question: z
+    .string()
+    .min(2, { message: "Question should be at least 2 characters long." })
+    .max(50, { message: "Question is too long." }),
+  image: z.string().url().optional().or(emptyStringToUndefined),
+  type: z.literal("open"),
+});
+
+const multipleQuestionSchema = z.object({
+  question: z
+    .string()
+    .min(2, { message: "Question should be at least 2 characters long." })
+    .max(50, { message: "Question is too long." }),
+  image: z.string().url().optional().or(emptyStringToUndefined),
+  type: z.literal("multiple"),
+  answer: z.array(
+    z
       .string()
-      .min(2, { message: "Question should be at least 2 characters long." })
-      .max(50, { message: "Question is too long." }),
-    image: z.string().url().optional().or(emptyStringToUndefined),
-    type: z.literal("multiple"),
-    answer: z.array(
-      z
-        .string()
-        .min(1, {
-          message: "Answer should be at least 1 character long.",
-        })
-        .max(100, { message: "Answer is too long." }),
-    ),
-    options: z
-      .array(z.string())
-      .min(2, { message: "There should be at least 2 options." }),
-  }),
-  z.object({
-    question: z
+      .min(1, {
+        message: "Answer should be at least 1 character long.",
+      })
+      .max(100, { message: "Answer is too long." }),
+  ),
+  options: z
+    .array(z.string())
+    .min(2, { message: "There should be at least 2 options." }),
+});
+
+const singleQuestionSchema = z.object({
+  question: z
+    .string()
+    .min(2, { message: "Question should be at least 2 characters long." })
+    .max(50, { message: "Question is too long." }),
+  image: z.string().url().optional().or(emptyStringToUndefined),
+  type: z.literal("single"),
+  // do not touch!
+  // even though we have one answer, it still should be cast to an array for db
+  answer: z.array(
+    z
       .string()
-      .min(2, { message: "Question should be at least 2 characters long." })
-      .max(50, { message: "Question is too long." }),
-    image: z.string().url().optional().or(emptyStringToUndefined),
-    type: z.literal("open"),
-  }),
-  z.object({
-    question: z
-      .string()
-      .min(2, { message: "Question should be at least 2 characters long." })
-      .max(50, { message: "Question is too long." }),
-    image: z.string().url().optional().or(emptyStringToUndefined),
-    type: z.literal("single"),
-    // do not touch!
-    // even though we have one answer, it still should be cast to an array for db
-    answer: z.array(
-      z
-        .string()
-        .min(1, {
-          message: "Answer should be at least 1 character long.",
-        })
-        .max(100, { message: "Answer is too long." }),
-    ),
-    options: z
-      .array(z.string())
-      .min(2, { message: "There should be at least 2 options." }),
-  }),
-]);
+      .min(1, {
+        message: "Answer should be at least 1 character long.",
+      })
+      .max(100, { message: "Answer is too long." }),
+  ),
+  options: z
+    .array(z.string())
+    .min(2, { message: "There should be at least 2 options." }),
+});
+
+const questionSchema = z
+  .discriminatedUnion("type", [
+    singleQuestionSchema,
+    openQuestionSchema,
+    multipleQuestionSchema,
+  ])
+  .refine(
+    (data) => {
+      if (data.type === "single")
+        return data.answer.every((val) => data.options.includes(val));
+      return true;
+    },
+    {
+      path: ["answer"],
+      message: "Answer should be included in options.",
+    },
+  )
+  .refine(
+    (data) => {
+      if (data.type === "multiple")
+        return data.answer.every((val) => data.options.includes(val));
+      return true;
+    },
+    {
+      path: ["answer"],
+      message: "All answers should be included in options.",
+    },
+  );
 
 export const questionsSchema = z.object({
   questions: z
