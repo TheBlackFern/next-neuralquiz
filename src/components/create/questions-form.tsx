@@ -24,13 +24,29 @@ import { Input } from "@/components/ui/input";
 import { OptionsInput } from "./options-input";
 import { ChevronDown, X } from "lucide-react";
 import { m } from "framer-motion";
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  DragEndEvent,
+} from "@dnd-kit/core";
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
 
 import { useToast } from "../ui/use-toast";
 import { useFieldArray, useForm } from "react-hook-form";
 import { cn } from "@/lib/utils";
 import { createTestWithQuestions } from "@/db";
 
-import { questionsSchema } from "@/db/schema";
+import { FormQuestion, questionsSchema } from "@/db/schema";
+import { SortableList } from "../sortable/sortable-list";
 
 const questionsInitial: FormQuestion[] = [
   {
@@ -41,8 +57,6 @@ const questionsInitial: FormQuestion[] = [
   },
 ];
 
-type FormQuestion = z.infer<typeof questionsSchema>["questions"][number];
-
 type QuestionsFormProps = {
   test: {
     topic: string;
@@ -52,6 +66,12 @@ type QuestionsFormProps = {
 };
 
 export function QuestionsForm({ test, resetTestForm }: QuestionsFormProps) {
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    }),
+  );
   const { toast } = useToast();
   const [collapsed, setCollapsed] = React.useState<boolean[]>([false]);
   // TODO: rewrite with form.setValue!
@@ -64,7 +84,7 @@ export function QuestionsForm({ test, resetTestForm }: QuestionsFormProps) {
     },
   });
 
-  const { fields, append, remove } = useFieldArray({
+  const { fields, append, remove, replace } = useFieldArray({
     name: "questions",
     control: form.control,
   });
@@ -102,6 +122,22 @@ export function QuestionsForm({ test, resetTestForm }: QuestionsFormProps) {
     remove(indexToRemove);
   }
 
+  // function handleDragEnd(event: DragEndEvent) {
+  //   const { active, over } = event;
+
+  //   if (active.id !== over.id) {
+  //     setItems((items) => {
+  //       const oldIndex = items.indexOf(active.id);
+  //       const newIndex = items.indexOf(over.id);
+
+  //       return arrayMove(items, oldIndex, newIndex);
+  //     });
+  //   }
+  //}
+
+  const [items, setItems] = React.useState(
+    [...new Array(15)].map((_, index) => ({ id: index + 1 })),
+  );
   // TODO: masonry layout
   // TODO: rearrange
   /*   grid-cols-[repeat(auto-fill,minmax(16rem,1fr))] */
@@ -112,7 +148,278 @@ export function QuestionsForm({ test, resetTestForm }: QuestionsFormProps) {
         className="min-w-[300px] space-y-[6px]"
       >
         <div className="grid grid-cols-1 place-content-center gap-3">
-          {fields.map((field, index) => (
+          <SortableList
+            items={fields}
+            onChange={(items) => {
+              replace(items);
+            }}
+            renderItem={(field) => (
+              <SortableList.Item className="space-x" id={field.id}>
+                {field.question}
+                <SortableList.DragHandle />
+              </SortableList.Item>
+            )}
+          >
+            {fields.map((field, index) => (
+              <SortableList.Item id={field.id}>
+                <m.div
+                  key={index}
+                  className={cn(
+                    "relative h-auto w-full space-y-[8px] rounded-lg border px-4 pb-2",
+                    collapsed[index] && "h-10",
+                  )}
+                >
+                  <div className="flex w-full items-center justify-between pt-1">
+                    <Button
+                      type="button"
+                      variant={"ghost"}
+                      onClick={() => {
+                        setCollapsed((prev) => {
+                          const upd = [...prev];
+                          upd[index] = !upd[index];
+                          return upd;
+                        });
+                      }}
+                      className={"-ml-3 h-8 w-8 p-0"}
+                    >
+                      <ChevronDown size={20} />
+                    </Button>
+
+                    <SortableList.DragHandle />
+                    {collapsed[index] && (
+                      <div className="relative flex max-w-[50%] justify-center">
+                        {form.getFieldState(`questions.${index}`).invalid && (
+                          <div className="absolute -left-7 top-0 h-6 w-6 rounded-md border bg-destructive text-center font-bold text-destructive-foreground">
+                            !
+                          </div>
+                        )}
+                        <p className="line-clamp-1 break-all text-muted-foreground">
+                          {form.watch(`questions.${index}.question`) ||
+                            "Empty question"}
+                        </p>
+                      </div>
+                    )}
+                    <Button
+                      type="button"
+                      variant={"ghost"}
+                      onClick={() => removeQuestion(index)}
+                      className={"-mr-3 h-8 w-8 p-0"}
+                    >
+                      <X size={20} />
+                    </Button>
+                  </div>
+
+                  {!collapsed[index] && (
+                    <>
+                      <FormField
+                        control={form.control}
+                        key={`${field.id}-question`}
+                        name={`questions.${index}.question`}
+                        render={({ field }) => (
+                          <FormItem className="space-y-[3px]">
+                            <FormLabel className="required">Question</FormLabel>
+                            <FormControl>
+                              <Input
+                                placeholder="Type in the question..."
+                                {...field}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        key={`${field.id}-image`}
+                        name={`questions.${index}.image`}
+                        render={({ field }) => (
+                          <FormItem className="space-y-[3px]">
+                            <FormLabel>Image</FormLabel>
+                            <FormControl>
+                              <Input
+                                placeholder="Type in an image URL..."
+                                {...field}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name={`questions.${index}.type`}
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="required">
+                              Question Type
+                            </FormLabel>
+                            <Select
+                              onValueChange={field.onChange}
+                              defaultValue={field.value}
+                            >
+                              <FormControl>
+                                <SelectTrigger>
+                                  <SelectValue placeholder="Select the question type  " />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                <SelectItem value="multiple">
+                                  Multiple-choice
+                                </SelectItem>
+                                <SelectItem value="single">
+                                  Single-choice
+                                </SelectItem>
+                                <SelectItem value="open">Open-ended</SelectItem>
+                              </SelectContent>
+                            </Select>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      {form.watch(`questions.${index}.type`) === "single" && (
+                        <>
+                          <FormField
+                            control={form.control}
+                            key={`${field.id}-answer`}
+                            name={`questions.${index}.answer`}
+                            render={({ field }) => (
+                              <FormItem className="space-y-[3px]">
+                                <FormLabel className="required">
+                                  Answer
+                                </FormLabel>
+                                <FormControl>
+                                  <Input
+                                    {...field}
+                                    onChange={(e) => {
+                                      field.onChange([e.target.value]);
+                                    }}
+                                    placeholder="Type in the correct answer..."
+                                  />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                          <FormField
+                            control={form.control}
+                            key={`${field.id}-options`}
+                            name={`questions.${index}.options`}
+                            render={({ field }) => (
+                              <FormItem className="space-y-[3px]">
+                                <FormLabel className="required">
+                                  Options
+                                </FormLabel>
+                                <FormControl>
+                                  <OptionsInput
+                                    {...field}
+                                    placeholder="Type in a new option..."
+                                    options={options}
+                                    index={index}
+                                    setOptions={(newOptions) => {
+                                      console.log(newOptions);
+                                      setOptions(newOptions);
+                                      form.setValue(
+                                        `questions.${index}.options`,
+                                        newOptions[index] as [
+                                          string,
+                                          ...string[],
+                                        ],
+                                      );
+                                      return setOptions;
+                                    }}
+                                  />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                        </>
+                      )}
+                      {form.watch(`questions.${index}.type`) === "open" && (
+                        <></>
+                      )}
+                      {form.watch(`questions.${index}.type`) === "multiple" && (
+                        <>
+                          <FormField
+                            control={form.control}
+                            key={`${field.id}-answer`}
+                            name={`questions.${index}.answer`}
+                            render={({ field }) => (
+                              <FormItem className="space-y-[3px]">
+                                <FormLabel className="required">
+                                  Answers
+                                </FormLabel>
+                                <FormControl>
+                                  <OptionsInput
+                                    {...field}
+                                    placeholder="Type in a new answer..."
+                                    options={answers}
+                                    index={index}
+                                    setOptions={(newOptions) => {
+                                      console.log(newOptions);
+                                      setAnswers(newOptions);
+                                      form.setValue(
+                                        `questions.${index}.answer`,
+                                        newOptions[index] as [
+                                          string,
+                                          ...string[],
+                                        ],
+                                      );
+                                      return setOptions;
+                                    }}
+                                  />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                          <FormField
+                            control={form.control}
+                            key={`${field.id}-options`}
+                            name={`questions.${index}.options`}
+                            render={({ field }) => (
+                              <FormItem className="space-y-[3px]">
+                                <FormLabel className="required">
+                                  Options
+                                </FormLabel>
+                                <FormControl>
+                                  <OptionsInput
+                                    {...field}
+                                    placeholder="Type in a new option..."
+                                    options={options}
+                                    index={index}
+                                    setOptions={(newOptions) => {
+                                      console.log(newOptions);
+                                      setOptions(newOptions);
+                                      form.setValue(
+                                        `questions.${index}.options`,
+                                        newOptions[index] as [
+                                          string,
+                                          ...string[],
+                                        ],
+                                      );
+                                      return setOptions;
+                                    }}
+                                  />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                        </>
+                      )}
+                    </>
+                  )}
+                </m.div>
+              </SortableList.Item>
+            ))}
+          </SortableList>
+          {/* <DndContext
+            sensors={sensors}
+            collisionDetection={closestCenter}
+            onDragEnd={handleDragEnd}
+          > */}
+          {/* {fields.map((field, index) => (
             <m.div
               key={index}
               className={cn(
@@ -341,7 +648,8 @@ export function QuestionsForm({ test, resetTestForm }: QuestionsFormProps) {
                 </>
               )}
             </m.div>
-          ))}
+          ))} */}
+          {/* </DndContext> */}
         </div>
         <p className="text-center text-destructive">
           🚧 Image upload is a Work in Progress, coming soon... 🚧

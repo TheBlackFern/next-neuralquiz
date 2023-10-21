@@ -134,3 +134,5 @@ export const questionsSchema = z.object({
     .array(questionSchema)
     .min(1, { message: "The test should have at least one question." }),
 });
+
+export type FormQuestion = z.infer<typeof questionsSchema>["questions"][number];
