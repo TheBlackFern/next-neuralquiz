@@ -51,6 +51,23 @@ export function QuestionsForm({ test, resetTestForm }: QuestionsFormProps) {
     control: form.control,
   });
 
+  // this all here is to fix the problem of the page height
+  // decreasing when all questions get collapsed on drag.
+  // we just force it to be as big as possible
+  const formRef = React.useRef<HTMLFormElement>(null);
+  const [formHeight, setFormHeight] = React.useState(200);
+
+  React.useLayoutEffect(() => {
+    if (formRef.current) {
+      const height = Math.max(
+        formRef.current.scrollHeight,
+        formRef.current.offsetHeight,
+        formHeight,
+      );
+      setFormHeight(height);
+    }
+  }, [answers, options, fields]);
+
   async function onSubmit(values: z.infer<typeof questionsSchema>) {
     const res = await createTestWithQuestions(values.questions, test);
     if (res?.error) {
@@ -100,7 +117,11 @@ export function QuestionsForm({ test, resetTestForm }: QuestionsFormProps) {
   return (
     <Form {...form}>
       <form
+        ref={formRef}
         onSubmit={form.handleSubmit(onSubmit)}
+        style={{
+          height: formHeight + "px",
+        }}
         className="min-w-[300px] space-y-[6px]"
       >
         <SortableList
