@@ -84,7 +84,7 @@ export function QuestionsForm({ test, resetTestForm }: QuestionsFormProps) {
     },
   });
 
-  const { fields, append, remove, replace } = useFieldArray({
+  const { fields, append, remove, swap } = useFieldArray({
     name: "questions",
     control: form.control,
   });
@@ -122,22 +122,6 @@ export function QuestionsForm({ test, resetTestForm }: QuestionsFormProps) {
     remove(indexToRemove);
   }
 
-  // function handleDragEnd(event: DragEndEvent) {
-  //   const { active, over } = event;
-
-  //   if (active.id !== over.id) {
-  //     setItems((items) => {
-  //       const oldIndex = items.indexOf(active.id);
-  //       const newIndex = items.indexOf(over.id);
-
-  //       return arrayMove(items, oldIndex, newIndex);
-  //     });
-  //   }
-  //}
-
-  const [items, setItems] = React.useState(
-    [...new Array(15)].map((_, index) => ({ id: index + 1 })),
-  );
   // TODO: masonry layout
   // TODO: rearrange
   /*   grid-cols-[repeat(auto-fill,minmax(16rem,1fr))] */
@@ -150,8 +134,8 @@ export function QuestionsForm({ test, resetTestForm }: QuestionsFormProps) {
         <div className="grid grid-cols-1 place-content-center gap-3">
           <SortableList
             items={fields}
-            onChange={(items) => {
-              replace([...items]);
+            onChange={(index1, index2) => {
+              swap(index1, index2);
             }}
             renderItem={(field, index) => (
               <SortableList.Item

@@ -9,7 +9,6 @@ import {
 import type { Active, UniqueIdentifier } from "@dnd-kit/core";
 import {
   SortableContext,
-  arrayMove,
   sortableKeyboardCoordinates,
 } from "@dnd-kit/sortable";
 import { SortableOverlay } from "./sortable-overlay";
@@ -21,7 +20,7 @@ interface BaseItem {
 
 interface Props<T extends BaseItem> {
   items: T[];
-  onChange(items: T[]): void;
+  onChange(index1: number, index2: number): void;
   renderItem(item: T, index: number): React.ReactNode;
   className?: string;
   children: React.ReactNode;
@@ -57,7 +56,7 @@ export function SortableList<T extends BaseItem>({
           const activeIndex = items.findIndex(({ id }) => id === active.id);
           const overIndex = items.findIndex(({ id }) => id === over.id);
 
-          onChange(arrayMove(items, activeIndex, overIndex));
+          onChange(activeIndex, overIndex);
         }
         setActive(null);
       }}
