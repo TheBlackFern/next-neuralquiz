@@ -51,8 +51,6 @@ export function QuestionsForm({ test, resetTestForm }: QuestionsFormProps) {
     control: form.control,
   });
 
-  // const isSubmittable = form.formState.isDirty && form.formState.isValid;
-
   async function onSubmit(values: z.infer<typeof questionsSchema>) {
     const res = await createTestWithQuestions(values.questions, test);
     if (res?.error) {
@@ -116,6 +114,9 @@ export function QuestionsForm({ test, resetTestForm }: QuestionsFormProps) {
             setCollapsed(prevCollapsedRef.current);
           }}
           onChange={(index1, index2) => {
+            const temp = prevCollapsedRef.current[index1];
+            prevCollapsedRef.current[index1] = prevCollapsedRef.current[index2];
+            prevCollapsedRef.current[index2] = temp;
             smoothSwap(index1, index2, swap);
           }}
           renderItem={(field, index) => (
