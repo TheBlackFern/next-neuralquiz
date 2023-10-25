@@ -41,7 +41,7 @@ import {
 } from "@dnd-kit/sortable";
 
 import { useToast } from "../ui/use-toast";
-import { useFieldArray, useForm } from "react-hook-form";
+import { UseFieldArraySwap, useFieldArray, useForm } from "react-hook-form";
 import { cn } from "@/lib/utils";
 import { createTestWithQuestions } from "@/db";
 
@@ -123,6 +123,18 @@ export function QuestionsForm({ test, resetTestForm }: QuestionsFormProps) {
     remove(indexToRemove);
   }
 
+  function smoothSwap(index1: number, index2: number, swap: UseFieldArraySwap) {
+    if (index1 < index2) {
+      for (let i = index1; i < index2; i++) {
+        swap(i, i + 1);
+      }
+    } else {
+      for (let i = index1; i > index2; i--) {
+        swap(i, i - 1);
+      }
+    }
+  }
+
   // TODO: masonry layout
   // TODO: rearrange
   /*   grid-cols-[repeat(auto-fill,minmax(16rem,1fr))] */
@@ -136,7 +148,9 @@ export function QuestionsForm({ test, resetTestForm }: QuestionsFormProps) {
           <SortableList
             items={fields}
             onChange={(index1, index2) => {
-              swap(index1, index2);
+              smoothSwap(index1, index2, swap);
+
+              // swap(index1, index2);
             }}
             renderItem={(field, index) => (
               <SortableList.Item
@@ -147,6 +161,18 @@ export function QuestionsForm({ test, resetTestForm }: QuestionsFormProps) {
                 id={field.id}
                 key={field.id}
               >
+                <QuestionForm
+                  form={form}
+                  id={field.id}
+                  index={index}
+                  setCollapsed={setCollapsed}
+                  isCollapsed={collapsed[index]}
+                  setOptions={setOptions}
+                  options={options}
+                  setAnswers={setAnswers}
+                  answers={answers}
+                  removeQuestion={removeQuestion}
+                />
                 {/* <div className="flex w-full items-center pt-1">
                   <Button
                     type="button"
@@ -384,18 +410,6 @@ export function QuestionsForm({ test, resetTestForm }: QuestionsFormProps) {
                     )}
                   </>
                 )} */}
-                <QuestionForm
-                  form={form}
-                  id={field.id}
-                  index={index}
-                  setCollapsed={setCollapsed}
-                  isCollapsed={collapsed[index]}
-                  setOptions={setOptions}
-                  options={options}
-                  setAnswers={setAnswers}
-                  answers={answers}
-                  removeQuestion={removeQuestion}
-                />
               </SortableList.Item>
             )}
             renderDraggedItem={(field, index) => (

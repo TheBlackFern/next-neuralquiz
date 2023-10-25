@@ -1,4 +1,3 @@
-import { ChevronDown, X } from "lucide-react";
 import React from "react";
 import { SortableList } from "../sortable/sortable-list";
 import { Button } from "../ui/button";
@@ -18,11 +17,15 @@ import {
   SelectValue,
 } from "../ui/select";
 import { OptionsInput } from "./options-input";
+import { ChevronDown, X } from "lucide-react";
+
+import { z } from "zod";
 import { UseFormReturn } from "react-hook-form";
+import { questionsSchema } from "@/db/schema";
 
 type QuestionFormProps = {
-  form: UseFormReturn;
-  id: number;
+  form: UseFormReturn<z.infer<typeof questionsSchema>>;
+  id: string | number;
   index: number;
   setCollapsed: React.Dispatch<React.SetStateAction<boolean[]>>;
   isCollapsed: boolean;
