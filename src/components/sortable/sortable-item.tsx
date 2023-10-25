@@ -70,7 +70,7 @@ export function DragHandle({ className }: { className?: string }) {
   return (
     <button
       type="button"
-      className={cn(buttonVariants({ variant: "ghost" }), "p-0", className)}
+      className={cn(buttonVariants({ variant: "ghost" }), "w-8 p-0", className)}
       {...attributes}
       {...listeners}
       ref={ref}

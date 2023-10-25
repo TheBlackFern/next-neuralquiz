@@ -23,6 +23,8 @@ interface Props<T extends BaseItem> {
   onChange(index1: number, index2: number): void;
   renderItem(item: T, index: number): React.ReactNode;
   renderDraggedItem(item: T, index: number): React.ReactNode;
+  onDragStartAdditional?: () => void;
+  onDragEndAdditional?: () => void;
   className?: string;
 }
 
@@ -31,6 +33,8 @@ export function SortableList<T extends BaseItem>({
   onChange,
   renderItem,
   renderDraggedItem,
+  onDragStartAdditional,
+  onDragEndAdditional,
   className,
 }: Props<T>) {
   const [active, setActive] = React.useState<Active | null>(null);
@@ -49,6 +53,7 @@ export function SortableList<T extends BaseItem>({
     <DndContext
       sensors={sensors}
       onDragStart={({ active }) => {
+        onDragStartAdditional && onDragStartAdditional();
         setActive(active);
       }}
       onDragEnd={({ active, over }) => {
@@ -59,9 +64,11 @@ export function SortableList<T extends BaseItem>({
           onChange(activeIndex, overIndex);
         }
         setActive(null);
+        onDragEndAdditional && onDragEndAdditional();
       }}
       onDragCancel={() => {
         setActive(null);
+        onDragEndAdditional && onDragEndAdditional();
       }}
     >
       <SortableContext items={items}>

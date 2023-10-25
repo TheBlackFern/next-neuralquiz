@@ -65,7 +65,7 @@ const QuestionForm = ({
         >
           <ChevronDown size={20} />
         </Button>
-        <SortableList.DragHandle />
+        <SortableList.DragHandle className="ml-2" />
 
         {isCollapsed && (
           <div className="relative ml-auto mr-auto flex max-w-[50%] justify-center">
