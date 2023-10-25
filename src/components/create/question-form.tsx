@@ -22,6 +22,7 @@ import { ChevronDown, X } from "lucide-react";
 import { z } from "zod";
 import { UseFormReturn } from "react-hook-form";
 import { questionsSchema } from "@/db/schema";
+import { cn } from "@/lib/utils";
 
 type QuestionFormProps = {
   form: UseFormReturn<z.infer<typeof questionsSchema>>;
@@ -63,7 +64,13 @@ const QuestionForm = ({
           }}
           className={"-ml-3 h-8 w-8 p-0"}
         >
-          <ChevronDown size={20} />
+          <ChevronDown
+            size={20}
+            className={cn(
+              "transition-all duration-300",
+              !isCollapsed && "rotate-180",
+            )}
+          />
         </Button>
         <SortableList.DragHandle className="ml-2" />
 
