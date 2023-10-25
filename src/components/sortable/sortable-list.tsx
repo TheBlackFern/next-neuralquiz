@@ -22,7 +22,7 @@ interface BaseItem {
 interface Props<T extends BaseItem> {
   items: T[];
   onChange(items: T[]): void;
-  renderItem(item: T): React.ReactNode;
+  renderItem(item: T, index: number): React.ReactNode;
   className?: string;
   children: React.ReactNode;
 }
@@ -67,14 +67,16 @@ export function SortableList<T extends BaseItem>({
     >
       <SortableContext items={items}>
         <ul className={className} role="application">
-          {children}
-          {/* {items.map((item, index) => (
-            <React.Fragment key={item.id}>{renderItem(item)}</React.Fragment>
-          ))} */}
+          {/* {children} */}
+          {items.map((item, index) => (
+            <React.Fragment key={item.id}>
+              {renderItem(item, index)}
+            </React.Fragment>
+          ))}
         </ul>
       </SortableContext>
       <SortableOverlay>
-        {activeItem ? renderItem(activeItem) : null}
+        {activeItem ? renderItem(activeItem, -1) : null}
       </SortableOverlay>
     </DndContext>
   );
