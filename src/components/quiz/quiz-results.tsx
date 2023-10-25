@@ -82,7 +82,7 @@ const QuizResults = ({
                 return (
                   <>
                     <p className="text-xs sm:text-sm">
-                      {answer.answer.length !== 0 ? (
+                      {answer.answer.length === 0 ? (
                         <span className="text-destructive">Not given</span>
                       ) : (
                         answer.answer.sort().join(", ")
