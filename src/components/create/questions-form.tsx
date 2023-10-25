@@ -47,6 +47,7 @@ import { createTestWithQuestions } from "@/db";
 
 import { FormQuestion, questionsSchema } from "@/db/schema";
 import { SortableList } from "../sortable/sortable-list";
+import QuestionForm from "./question-form";
 
 const questionsInitial: FormQuestion[] = [
   {
@@ -140,20 +141,13 @@ export function QuestionsForm({ test, resetTestForm }: QuestionsFormProps) {
             renderItem={(field, index) => (
               <SortableList.Item
                 className={cn(
-                  "relative h-auto w-full space-y-[8px] rounded-lg border px-4 pb-2",
+                  "relative h-auto w-full list-none space-y-[8px] rounded-lg border px-4 pb-2",
                   collapsed[index] && "h-10",
                 )}
                 id={field.id}
                 key={field.id}
               >
-                {/* <m.div
-                  key={index}
-                  className={cn(
-                    "relative h-auto w-full space-y-[8px] rounded-lg border px-4 pb-2",
-                    collapsed[index] && "h-10",
-                  )}
-                > */}
-                <div className="flex w-full items-center pt-1">
+                {/* <div className="flex w-full items-center pt-1">
                   <Button
                     type="button"
                     variant={"ghost"}
@@ -389,12 +383,72 @@ export function QuestionsForm({ test, resetTestForm }: QuestionsFormProps) {
                       </>
                     )}
                   </>
-                )}
-                {/* </m.div> */}
+                )} */}
+                <QuestionForm
+                  form={form}
+                  id={field.id}
+                  index={index}
+                  setCollapsed={setCollapsed}
+                  isCollapsed={collapsed[index]}
+                  setOptions={setOptions}
+                  options={options}
+                  setAnswers={setAnswers}
+                  answers={answers}
+                  removeQuestion={removeQuestion}
+                />
               </SortableList.Item>
             )}
-          >
-            {fields.map((field, index) => (
+            renderDraggedItem={(field, index) => (
+              <SortableList.Item
+                className={cn(
+                  "relative h-auto w-full list-none space-y-[8px] rounded-lg border px-4 pb-2",
+                  collapsed[index] && "h-10",
+                )}
+                id={field.id}
+                key={field.id}
+              >
+                <div className="flex w-full items-center pt-1">
+                  <Button
+                    type="button"
+                    variant={"ghost"}
+                    onClick={() => {
+                      setCollapsed((prev) => {
+                        const upd = [...prev];
+                        upd[index] = !upd[index];
+                        return upd;
+                      });
+                    }}
+                    className={"-ml-3 h-8 w-8 p-0"}
+                  >
+                    <ChevronDown size={20} />
+                  </Button>
+                  <SortableList.DragHandle />
+
+                  <div className="relative ml-auto mr-auto flex max-w-[50%] justify-center">
+                    {form.getFieldState(`questions.${index}`).invalid && (
+                      <div className="absolute -left-7 top-0 h-6 w-6 rounded-md border bg-destructive text-center font-bold text-destructive-foreground">
+                        !
+                      </div>
+                    )}
+                    <p className="line-clamp-1 break-all text-muted-foreground">
+                      {form.watch(`questions.${index}.question`) ||
+                        "Empty question"}
+                    </p>
+                  </div>
+
+                  <Button
+                    type="button"
+                    variant={"ghost"}
+                    onClick={() => removeQuestion(index)}
+                    className={"-mr-3 ml-auto h-8 w-8 p-0"}
+                  >
+                    <X size={20} />
+                  </Button>
+                </div>
+              </SortableList.Item>
+            )}
+          />
+          {/* {fields.map((field, index) => (
               <SortableList.Item
                 className={cn(
                   "relative h-auto w-full space-y-[8px] rounded-lg border px-4 pb-2",
@@ -403,13 +457,6 @@ export function QuestionsForm({ test, resetTestForm }: QuestionsFormProps) {
                 id={field.id}
                 key={field.id}
               >
-                {/* <m.div
-                  key={index}
-                  className={cn(
-                    "relative h-auto w-full space-y-[8px] rounded-lg border px-4 pb-2",
-                    collapsed[index] && "h-10",
-                  )}
-                > */}
                 <div className="flex w-full items-center justify-between pt-1">
                   <Button
                     type="button"
@@ -647,10 +694,9 @@ export function QuestionsForm({ test, resetTestForm }: QuestionsFormProps) {
                     )}
                   </>
                 )}
-                {/* </m.div> */}
               </SortableList.Item>
             ))}
-          </SortableList>
+          </SortableList> */}
           {/* <DndContext
             sensors={sensors}
             collisionDetection={closestCenter}

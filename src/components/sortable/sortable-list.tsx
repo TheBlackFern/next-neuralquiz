@@ -22,16 +22,16 @@ interface Props<T extends BaseItem> {
   items: T[];
   onChange(index1: number, index2: number): void;
   renderItem(item: T, index: number): React.ReactNode;
+  renderDraggedItem(item: T, index: number): React.ReactNode;
   className?: string;
-  children: React.ReactNode;
 }
 
 export function SortableList<T extends BaseItem>({
   items,
   onChange,
   renderItem,
+  renderDraggedItem,
   className,
-  children,
 }: Props<T>) {
   const [active, setActive] = React.useState<Active | null>(null);
   const activeItem = React.useMemo(
@@ -66,7 +66,6 @@ export function SortableList<T extends BaseItem>({
     >
       <SortableContext items={items}>
         <ul className={className} role="application">
-          {/* {children} */}
           {items.map((item, index) => (
             <React.Fragment key={item.id}>
               {renderItem(item, index)}
@@ -75,7 +74,12 @@ export function SortableList<T extends BaseItem>({
         </ul>
       </SortableContext>
       <SortableOverlay>
-        {activeItem ? renderItem(activeItem, -1) : null}
+        {activeItem
+          ? renderDraggedItem(
+              activeItem,
+              items.findIndex(({ id }) => id === activeItem.id),
+            )
+          : null}
       </SortableOverlay>
     </DndContext>
   );
