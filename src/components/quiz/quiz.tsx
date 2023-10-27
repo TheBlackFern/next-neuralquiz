@@ -233,7 +233,6 @@ const Quiz = ({ questions, testID }: QuizProps) => {
               [],
             )}
             answers={answers}
-            // TODO: calculate?
             // score={answers.reduce<number>((score, choice) => {
             //   choice?.correctAnswer && score++;
             //   return score;

@@ -78,13 +78,13 @@ const QuestionForm = (props: QuestionFormProps) => {
         <SortableList.DragHandle className="ml-2 h-8 w-8 rounded-lg" />
 
         {isCollapsed && (
-          <div className="relative ml-auto mr-auto flex max-w-[50%] justify-center">
+          <div className="relative ml-auto flex max-w-[50%] justify-center">
             {form.getFieldState(`questions.${index}`).invalid && (
               <div className="absolute -left-7 top-0 h-6 w-6 rounded-md border bg-destructive text-center font-bold text-destructive-foreground">
                 !
               </div>
             )}
-            <p className="line-clamp-1 break-all text-muted-foreground">
+            <p className="line-clamp-1 break-all text-center text-muted-foreground">
               {form.watch(`questions.${index}.question`) || "Empty question"}
             </p>
           </div>

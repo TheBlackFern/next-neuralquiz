@@ -112,7 +112,6 @@ export function QuestionsForm({ test, resetTestForm }: QuestionsFormProps) {
   }
 
   // TODO: masonry layout
-  // TODO: rearrange
   /*   grid-cols-[repeat(auto-fill,minmax(16rem,1fr))] */
   return (
     <Form {...form}>
