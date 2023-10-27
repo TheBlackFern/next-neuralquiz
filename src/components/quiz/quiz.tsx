@@ -179,13 +179,13 @@ const Quiz = ({ questions, testID }: QuizProps) => {
             >
               <Button
                 variant="ghost"
-                className="absolute left-0.5 top-1 h-6 w-6 p-0"
+                className="absolute left-1.5 top-2 h-6 w-6 p-0"
                 onClick={() => {
                   handleBookmarked(index);
                 }}
               >
                 <Star
-                  size={18}
+                  size={20}
                   className={cn(
                     isBookmarked[index] ? "text-primary" : "text-background",
                   )}
