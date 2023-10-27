@@ -33,7 +33,7 @@ const QuizInputSingle = ({
             />
             <Label
               htmlFor={`r-${optionIndex}-${step}`}
-              className={cn("w-full text-base font-normal")}
+              className={cn("w-full cursor-pointer text-base font-normal")}
             >
               {option}
             </Label>
