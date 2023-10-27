@@ -75,7 +75,7 @@ const QuestionForm = (props: QuestionFormProps) => {
             )}
           />
         </Button>
-        <SortableList.DragHandle className="ml-2" />
+        <SortableList.DragHandle className="ml-2 h-8 w-8 rounded-lg" />
 
         {isCollapsed && (
           <div className="relative ml-auto mr-auto flex max-w-[50%] justify-center">
