@@ -54,7 +54,7 @@ const QuestionForm = (props: QuestionFormProps) => {
   } = props;
   return (
     <>
-      <div className="flex w-full items-center pt-1">
+      <div className="flex w-full items-center">
         <Button
           type="button"
           variant={"ghost"}
