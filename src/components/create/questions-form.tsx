@@ -112,7 +112,6 @@ export function QuestionsForm({ test, resetTestForm }: QuestionsFormProps) {
   }
 
   // TODO: masonry layout
-  // TODO: rearrange
   /*   grid-cols-[repeat(auto-fill,minmax(16rem,1fr))] */
   return (
     <Form {...form}>
@@ -143,7 +142,7 @@ export function QuestionsForm({ test, resetTestForm }: QuestionsFormProps) {
           renderItem={(field, index) => (
             <SortableList.Item
               className={
-                "relative h-auto w-full list-none space-y-[8px] rounded-lg border px-4 pb-2"
+                "relative h-auto w-full list-none space-y-[8px] rounded-lg border px-4 py-1"
               }
               id={field.id}
               key={field.id}
@@ -165,7 +164,7 @@ export function QuestionsForm({ test, resetTestForm }: QuestionsFormProps) {
           renderDraggedItem={(field, index) => (
             <SortableList.Item
               className={
-                "relative h-auto w-full list-none space-y-[8px] rounded-lg border px-4 pb-2"
+                "relative h-auto w-full list-none space-y-[8px] rounded-lg border px-4"
               }
               id={field.id}
               key={field.id}

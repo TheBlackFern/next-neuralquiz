@@ -8,6 +8,7 @@ import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "../ui/button";
+import { GripVertical } from "lucide-react";
 
 interface Props {
   id: UniqueIdentifier;
@@ -70,14 +71,12 @@ export function DragHandle({ className }: { className?: string }) {
   return (
     <button
       type="button"
-      className={cn(buttonVariants({ variant: "ghost" }), "w-8 p-0", className)}
+      className={cn(buttonVariants({ variant: "ghost" }), "p-0", className)}
       {...attributes}
       {...listeners}
       ref={ref}
     >
-      <svg viewBox="0 0 20 20" width="12">
-        <path d="M7 2a2 2 0 1 0 .001 4.001A2 2 0 0 0 7 2zm0 6a2 2 0 1 0 .001 4.001A2 2 0 0 0 7 8zm0 6a2 2 0 1 0 .001 4.001A2 2 0 0 0 7 14zm6-8a2 2 0 1 0-.001-4.001A2 2 0 0 0 13 6zm0 2a2 2 0 1 0 .001 4.001A2 2 0 0 0 13 8zm0 6a2 2 0 1 0 .001 4.001A2 2 0 0 0 13 14z"></path>
-      </svg>
+      <GripVertical className="" size={16} />
     </button>
   );
 }

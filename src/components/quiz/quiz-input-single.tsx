@@ -29,11 +29,11 @@ const QuizInputSingle = ({
             <RadioGroupItem
               disabled={currentStep !== step}
               value={option}
-              id={`r${optionIndex}`}
+              id={`r-${optionIndex}-${step}`}
             />
             <Label
-              htmlFor={`r${optionIndex}`}
-              className={cn(" w-full text-base font-normal")}
+              htmlFor={`r-${optionIndex}-${step}`}
+              className={cn("w-full cursor-pointer text-base font-normal")}
             >
               {option}
             </Label>

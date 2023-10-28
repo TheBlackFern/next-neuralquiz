@@ -35,12 +35,12 @@ const QuizInputMultiple = ({
             <Checkbox
               disabled={currentStep !== step}
               value={option}
-              id={`o${optionIndex}`}
+              id={`o-${optionIndex}-${step}`}
               onCheckedChange={(checked) => handleChecked(checked, option)}
             />
             <Label
-              htmlFor={`o${optionIndex}`}
-              className={cn("w-full text-base font-normal")}
+              htmlFor={`o-${optionIndex}-${step}`}
+              className={cn("w-full cursor-pointer text-base font-normal")}
             >
               {option}
             </Label>

@@ -23,6 +23,8 @@ import { z } from "zod";
 import { UseFormReturn } from "react-hook-form";
 import { questionsSchema } from "@/db/schema";
 import { cn } from "@/lib/utils";
+import InputSingle from "./input-single";
+import InputMultiple from "./input-multiple";
 
 type QuestionFormProps = {
   form: UseFormReturn<z.infer<typeof questionsSchema>>;
@@ -37,21 +39,22 @@ type QuestionFormProps = {
   removeQuestion(indexToRemove: number): void;
 };
 
-const QuestionForm = ({
-  form,
-  id,
-  index,
-  setCollapsed,
-  isCollapsed,
-  setOptions,
-  options,
-  setAnswers,
-  answers,
-  removeQuestion,
-}: QuestionFormProps) => {
+const QuestionForm = (props: QuestionFormProps) => {
+  const {
+    form,
+    id,
+    index,
+    setCollapsed,
+    isCollapsed,
+    setOptions,
+    options,
+    setAnswers,
+    answers,
+    removeQuestion,
+  } = props;
   return (
     <>
-      <div className="flex w-full items-center pt-1">
+      <div className="flex w-full items-center">
         <Button
           type="button"
           variant={"ghost"}
@@ -72,16 +75,16 @@ const QuestionForm = ({
             )}
           />
         </Button>
-        <SortableList.DragHandle className="ml-2" />
+        <SortableList.DragHandle className="ml-2 h-8 w-8 rounded-lg" />
 
         {isCollapsed && (
-          <div className="relative ml-auto mr-auto flex max-w-[50%] justify-center">
+          <div className="relative ml-auto flex max-w-[50%] justify-center">
             {form.getFieldState(`questions.${index}`).invalid && (
               <div className="absolute -left-7 top-0 h-6 w-6 rounded-md border bg-destructive text-center font-bold text-destructive-foreground">
                 !
               </div>
             )}
-            <p className="line-clamp-1 break-all text-muted-foreground">
+            <p className="line-clamp-1 break-all text-center text-muted-foreground">
               {form.watch(`questions.${index}.question`) || "Empty question"}
             </p>
           </div>
@@ -151,117 +154,11 @@ const QuestionForm = ({
             )}
           />
           {form.watch(`questions.${index}.type`) === "single" && (
-            <>
-              <FormField
-                control={form.control}
-                key={`${id}-answer`}
-                name={`questions.${index}.answer`}
-                render={({ field }) => (
-                  <FormItem className="space-y-[3px]">
-                    <FormLabel className="required">Answer</FormLabel>
-                    <FormControl>
-                      <Input
-                        {...field}
-                        onChange={(e) => {
-                          field.onChange([e.target.value]);
-                        }}
-                        placeholder="Type in the correct answer..."
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                key={`${id}-options`}
-                name={`questions.${index}.options`}
-                render={({ field }) => (
-                  <FormItem className="space-y-[3px]">
-                    <FormLabel className="required">Options</FormLabel>
-                    <FormControl>
-                      <OptionsInput
-                        {...field}
-                        placeholder="Type in a new option..."
-                        options={options}
-                        index={index}
-                        setOptions={(newOptions) => {
-                          console.log(newOptions);
-                          setOptions(newOptions);
-                          form.setValue(
-                            `questions.${index}.options`,
-                            newOptions[index] as [string, ...string[]],
-                          );
-                          return setOptions;
-                        }}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </>
+            <InputSingle {...props} />
           )}
-          {form.watch(`questions.${index}.type`) === "open" && <></>}
+          {/* {form.watch(`questions.${index}.type`) === "open" && <InputOpen {...props}/>} */}
           {form.watch(`questions.${index}.type`) === "multiple" && (
-            <>
-              <FormField
-                control={form.control}
-                key={`${id}-answer`}
-                name={`questions.${index}.answer`}
-                render={({ field }) => (
-                  <FormItem className="space-y-[3px]">
-                    <FormLabel className="required">Answers</FormLabel>
-                    <FormControl>
-                      <OptionsInput
-                        {...field}
-                        placeholder="Type in a new answer..."
-                        options={answers}
-                        index={index}
-                        setOptions={(newOptions) => {
-                          console.log(newOptions);
-                          setAnswers(newOptions);
-                          form.setValue(
-                            `questions.${index}.answer`,
-                            newOptions[index] as [string, ...string[]],
-                          );
-                          return setOptions;
-                        }}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                key={`${id}-options`}
-                name={`questions.${index}.options`}
-                render={({ field }) => (
-                  <FormItem className="space-y-[3px]">
-                    <FormLabel className="required">Options</FormLabel>
-                    <FormControl>
-                      <OptionsInput
-                        {...field}
-                        placeholder="Type in a new option..."
-                        options={options}
-                        index={index}
-                        setOptions={(newOptions) => {
-                          console.log(newOptions);
-                          setOptions(newOptions);
-                          form.setValue(
-                            `questions.${index}.options`,
-                            newOptions[index] as [string, ...string[]],
-                          );
-                          return setOptions;
-                        }}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </>
+            <InputMultiple {...props} />
           )}
         </>
       )}
