@@ -1,23 +1,21 @@
+import { COOKIE_NAME, MAX_AGE } from "@/constants";
 import { serialize } from "cookie";
 import { sign } from "jsonwebtoken";
-import { NextResponse } from "next/server";
-
-const MAX_AGE = 60 * 60 * 24 * 30;
 
 export async function POST(request: Request) {
-  const body = await request.json();
-  const { username, password } = body;
+  const res = await request.json();
+  const { username, password } = res;
   if (username !== "admin" || password !== "admin") {
-    return NextResponse.json(
-      {
+    return new Response(
+      JSON.stringify({
         message: "Unauthorized",
-      },
+      }),
       {
         status: 401,
       },
     );
   }
-  const secret = process.env.JWT_SECRET || "";
+  const secret = `${process.env.JWT_SECRET}` || "";
   const token = sign(
     {
       username,
@@ -27,7 +25,7 @@ export async function POST(request: Request) {
       expiresIn: MAX_AGE,
     },
   );
-  const serialized = serialize("OutsideJWT", token, {
+  const serialized = serialize(COOKIE_NAME, token, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "strict",
