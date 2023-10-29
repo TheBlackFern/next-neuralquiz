@@ -93,18 +93,6 @@ const Quiz = ({ questions, testID }: QuizProps) => {
         )}. Please, try again.`,
       });
     }
-    // if (res?.result) {
-    //   toast({
-    //     title: "Submitted results",
-    //     description: (
-    //       <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-    //         <code className="text-white">
-    //           {JSON.stringify(res.result, null, 2)}
-    //         </code>
-    //       </pre>
-    //     ),
-    //   });
-    // }
   }
 
   return (
