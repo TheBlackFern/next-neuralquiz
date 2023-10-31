@@ -1,4 +1,4 @@
-import QuizResults from "@/components/quiz/quiz-results";
+import QuizResults from "@/components/results/result";
 import { fetchResult } from "@/db";
 import { TAnswer } from "@/db/schema";
 

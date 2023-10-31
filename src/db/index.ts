@@ -33,7 +33,7 @@ export async function fetchTests() {
 }
 
 export async function fetchResults() {
-  const allTests = await db
+  const allResults = await db
     .select({
       id: results.id,
       testtaker: results.testtaker,
@@ -41,7 +41,7 @@ export async function fetchResults() {
     })
     .from(results)
     .leftJoin(tests, eq(results.test, tests.id));
-  return allTests;
+  return allResults;
 }
 
 export async function fetchResult(resultID: number) {
