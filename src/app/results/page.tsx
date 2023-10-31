@@ -10,7 +10,7 @@ const Page = async () => {
     <div className="flex flex-col gap-3">
       {results.map((res) => (
         <Link
-          href={`/result/${res.id}`}
+          href={`/results/${res.id}`}
           className={cn(buttonVariants({ variant: "secondary" }))}
         >
           {res.testtaker} {res.test}

@@ -14,7 +14,7 @@ type QuizLinkProps = {
 const QuizLink = ({ test }: QuizLinkProps) => {
   return (
     <Link
-      href={`/test/${test.id}`}
+      href={`/tests/${test.id}`}
       className={cn(
         buttonVariants({ variant: "secondary" }),
         "group flex h-auto w-[90vw] max-w-[600px] flex-row justify-start gap-3 px-5 py-3 sm:w-[70vw]",

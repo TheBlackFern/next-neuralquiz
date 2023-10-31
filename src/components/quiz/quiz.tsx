@@ -84,7 +84,7 @@ const Quiz = ({ questions, testID }: QuizProps) => {
       //     </pre>
       //   ),
       // });
-      router.push("/result/" + res);
+      router.push("/results/" + res);
     } catch (error) {
       toast({
         title: "Something went wrong",
