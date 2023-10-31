@@ -19,14 +19,16 @@ export async function GET() {
   const secret = `${process.env.JWT_SECRET}` || "";
   try {
     verify(value, secret);
-    const response = {
-      message: "Authorized!",
-    };
-    return new Response(JSON.stringify(response), {
-      status: 200,
-    });
+    return new Response(
+      JSON.stringify({
+        message: "Authorized!",
+      }),
+      {
+        status: 200,
+      },
+    );
   } catch (e) {
-    new Response(
+    return new Response(
       JSON.stringify({
         message: "Something went wrong",
       }),
