@@ -1,11 +1,7 @@
 import React from "react";
-import Link from "next/link";
+import LinkButton from "@/components/shared/link-button";
 
-import { buttonVariants } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 import { fetchResults } from "@/db";
-import { ChevronsRight } from "lucide-react";
-import ResultLink from "@/components/results/result-link";
 
 const Page = async () => {
   const results = await fetchResults();
@@ -14,7 +10,12 @@ const Page = async () => {
       <h2 className="text-3xl font-medium">Test Results</h2>
       <div className="grid w-full gap-3 [grid-template-columns:repeat(auto-fill,minmax(150px,1fr))]">
         {results.map((res) => (
-          <ResultLink result={res} />
+          <LinkButton
+            href={"/results/" + res.id}
+            key={res.id}
+            topText={res.testtaker}
+            bottomText={res.test ?? ""}
+          />
           // <Link
           //   href={`/results/${res.id}`}
           //   className={cn(

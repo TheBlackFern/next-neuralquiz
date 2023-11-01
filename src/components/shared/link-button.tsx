@@ -5,27 +5,35 @@ import { ChevronsRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 import { buttonVariants } from "../ui/button";
-import { TTest } from "@/db/schema";
 
-type QuizLinkProps = {
-  test: TTest;
+type LinkButtonProps = {
+  href: string;
+  topText: string;
+  bottomText?: string;
+  className?: string;
 };
 
-const QuizLink = ({ test }: QuizLinkProps) => {
+const LinkButton = ({
+  href,
+  topText,
+  bottomText,
+  className,
+}: LinkButtonProps) => {
   return (
     <Link
-      href={`/tests/${test.id}`}
+      href={href}
       className={cn(
         buttonVariants({ variant: "secondary" }),
-        "group flex h-auto w-[90vw] max-w-[600px] flex-row justify-start gap-3 px-5 py-3 sm:w-[70vw]",
+        "group flex h-auto flex-row justify-start gap-3 px-5 py-3",
+        className,
       )}
     >
       <p className="text-start">
         <span className="line-clamp-1 break-all text-base sm:text-lg">
-          {test.topic}
+          {topText}
         </span>
         <span className="line-clamp-1 break-all text-[12px] text-muted-foreground sm:text-base">
-          {test.description}
+          {bottomText}
         </span>
       </p>
       <ChevronsRight
@@ -37,4 +45,4 @@ const QuizLink = ({ test }: QuizLinkProps) => {
   );
 };
 
-export default QuizLink;
+export default LinkButton;
