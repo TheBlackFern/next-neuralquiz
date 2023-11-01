@@ -32,6 +32,18 @@ export async function fetchTests() {
   return allTests;
 }
 
+export async function fetchResults() {
+  const allResults = await db
+    .select({
+      id: results.id,
+      testtaker: results.testtaker,
+      test: tests.topic,
+    })
+    .from(results)
+    .leftJoin(tests, eq(results.test, tests.id));
+  return allResults;
+}
+
 export async function fetchResult(resultID: number) {
   return await db.transaction(async (tx) => {
     const result = await tx

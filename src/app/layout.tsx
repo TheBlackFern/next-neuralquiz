@@ -25,7 +25,7 @@ export default function RootLayout({
         <Providers>
           <Nav />
 
-          <main className="relative flex min-h-screen w-full flex-col items-center justify-between p-5 pt-24 sm:p-24">
+          <main className="relative flex min-h-screen w-full flex-col items-center p-5 pt-24 sm:p-24">
             {children}
             <Background />
             <Toaster />
