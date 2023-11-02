@@ -13,6 +13,7 @@ import { TQuestions, createResults } from "@/db";
 import { TAnswer } from "@/db/schema";
 import { Bookmark, Star } from "lucide-react";
 import { useTheme } from "next-themes";
+import { QuizSubmitButton } from "./quiz-submit-button";
 
 function calculateInitial(questions: TQuestions) {
   const initialAnswers: TAnswer[] = [];
@@ -73,9 +74,9 @@ const Quiz = ({ questions, testID }: QuizProps) => {
     });
   }
 
-  async function handleSubmit() {
+  async function handleSubmit(name: string) {
     try {
-      const res = await createResults(answers.current, testID);
+      const res = await createResults(answers.current, name, testID);
       // toast({
       //   title: "Submitted results",
       //   description: (
@@ -98,9 +99,7 @@ const Quiz = ({ questions, testID }: QuizProps) => {
   return (
     <div className="flex min-h-screen w-[300px] flex-col items-center gap-4 overflow-x-hidden md:w-[600px]">
       <div className="mt-2 space-x-3">
-        <Button className="" onClick={handleSubmit}>
-          Submit
-        </Button>
+        <QuizSubmitButton handleSubmit={handleSubmit} />
         <Link
           href="/tests"
           className={cn(buttonVariants({ variant: "outline" }))}
@@ -183,12 +182,14 @@ const Quiz = ({ questions, testID }: QuizProps) => {
                 />
               </Button>
               {index === questions.length - 1 && (
-                <Button
-                  disabled={step !== questions.length - 1}
-                  onClick={handleSubmit}
-                >
-                  Submit
-                </Button>
+                // <Button
+                //   disabled={step !== questions.length - 1}
+                //   onClick={handleSubmit}
+                // >
+                //   Submit
+                // </Button>
+
+                <QuizSubmitButton handleSubmit={handleSubmit} />
               )}
               {index !== questions.length - 1 && (
                 <Button

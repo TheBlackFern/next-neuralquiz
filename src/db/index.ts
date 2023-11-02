@@ -109,10 +109,14 @@ export async function createTestWithQuestions(
   }
 }
 
-export async function createResults(answers: TAnswer[], testID: number) {
+export async function createResults(
+  answers: TAnswer[],
+  username: string,
+  testID: number,
+) {
   try {
     const result: TNewResult = {
-      testtaker: "noone",
+      testtaker: username,
       test: testID,
       answers: answers,
     };
