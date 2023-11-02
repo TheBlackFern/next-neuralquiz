@@ -33,12 +33,14 @@ const usernameSchema = z.object({
 });
 
 type QuizSubmitButtonProps = {
+  isDisabled?: boolean;
   handleSubmit(name: string): void;
 };
 
-export function QuizSubmitButton({ handleSubmit }: QuizSubmitButtonProps) {
-  const inputRef = React.useRef<HTMLInputElement>(null);
-
+export function QuizSubmitButton({
+  isDisabled,
+  handleSubmit,
+}: QuizSubmitButtonProps) {
   const form = useForm<z.infer<typeof usernameSchema>>({
     resolver: zodResolver(usernameSchema),
     defaultValues: {
@@ -52,7 +54,9 @@ export function QuizSubmitButton({ handleSubmit }: QuizSubmitButtonProps) {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button type="button">Submit</Button>
+        <Button disabled={isDisabled || false} type="button">
+          Submit
+        </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>

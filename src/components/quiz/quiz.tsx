@@ -3,17 +3,17 @@ import React from "react";
 import Link from "next/link";
 import { Button, buttonVariants } from "../ui/button";
 import QuizQuestion from "./quiz-question";
+import { QuizSubmitButton } from "./quiz-submit-button";
 import { m } from "framer-motion";
+import { Bookmark, Star } from "lucide-react";
 
+import { useTheme } from "next-themes";
 import { useToast } from "../ui/use-toast";
 import { useRouter } from "next/navigation";
 import { cn, getErrorMessage } from "@/lib/utils";
 
 import { TQuestions, createResults } from "@/db";
 import { TAnswer } from "@/db/schema";
-import { Bookmark, Star } from "lucide-react";
-import { useTheme } from "next-themes";
-import { QuizSubmitButton } from "./quiz-submit-button";
 
 function calculateInitial(questions: TQuestions) {
   const initialAnswers: TAnswer[] = [];
@@ -189,7 +189,10 @@ const Quiz = ({ questions, testID }: QuizProps) => {
                 //   Submit
                 // </Button>
 
-                <QuizSubmitButton handleSubmit={handleSubmit} />
+                <QuizSubmitButton
+                  isDisabled={step !== questions.length - 1}
+                  handleSubmit={handleSubmit}
+                />
               )}
               {index !== questions.length - 1 && (
                 <Button
