@@ -13,6 +13,7 @@ type QuizQuestionProps = {
   step: number;
   answers: React.MutableRefObject<TAnswer[]>;
   handleGivenAnswer(index: number): void;
+  renderBookmark: () => React.ReactNode;
   children: React.ReactNode;
 };
 
@@ -25,7 +26,14 @@ export type QuizInputProps = {
 };
 
 const QuizQuestion = (props: QuizQuestionProps) => {
-  const { question, step, answers, handleGivenAnswer, children } = props;
+  const {
+    question,
+    step,
+    answers,
+    handleGivenAnswer,
+    renderBookmark,
+    children,
+  } = props;
 
   return (
     <section
@@ -34,6 +42,7 @@ const QuizQuestion = (props: QuizQuestionProps) => {
         question.image && "md:w-[600px]",
       )}
     >
+      {renderBookmark()}
       <div className="w-full max-w-[300px]">
         <div className="flex flex-col space-y-1.5 p-6 pb-3">
           <h2 className="text-lg font-semibold leading-none tracking-tight">

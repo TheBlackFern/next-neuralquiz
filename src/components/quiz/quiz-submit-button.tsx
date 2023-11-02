@@ -14,7 +14,7 @@ import {
 import { Input } from "@/components/ui/input";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { UseFormReturn, useForm } from "react-hook-form";
 import * as z from "zod";
 import {
   Form,
@@ -26,6 +26,12 @@ import {
   FormMessage,
 } from "../ui/form";
 
+import { useToast } from "../ui/use-toast";
+import { useRouter } from "next/navigation";
+import { createResults } from "@/db";
+import { getErrorMessage } from "@/lib/utils";
+import type { TAnswer } from "@/db/schema";
+
 const usernameSchema = z.object({
   username: z.string().min(2, {
     message: "Name must be at least 2 characters.",
@@ -33,14 +39,19 @@ const usernameSchema = z.object({
 });
 
 type QuizSubmitButtonProps = {
+  answers: TAnswer[];
+  testId: number;
   isDisabled?: boolean;
-  handleSubmit(name: string): void;
 };
 
-export function QuizSubmitButton({
+export const QuizSubmitButton = ({
+  answers,
+  testId,
   isDisabled,
-  handleSubmit,
-}: QuizSubmitButtonProps) {
+}: QuizSubmitButtonProps) => {
+  const { toast } = useToast();
+  const router = useRouter();
+
   const form = useForm<z.infer<typeof usernameSchema>>({
     resolver: zodResolver(usernameSchema),
     defaultValues: {
@@ -48,8 +59,26 @@ export function QuizSubmitButton({
     },
   });
 
-  function onSubmit(values: z.infer<typeof usernameSchema>) {
-    handleSubmit(values.username);
+  async function onSubmit(values: z.infer<typeof usernameSchema>) {
+    try {
+      const res = await createResults(answers, values.username, testId);
+      // toast({
+      //   title: "Submitted results",
+      //   description: (
+      //     <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+      //       <code className="text-white">{JSON.stringify(res, null, 2)}</code>
+      //     </pre>
+      //   ),
+      // });
+      router.push("/results/" + res);
+    } catch (error) {
+      toast({
+        title: "Something went wrong",
+        description: `Failed to submit results: ${getErrorMessage(
+          error,
+        )}. Please, try again.`,
+      });
+    }
   }
   return (
     <Dialog>
@@ -65,30 +94,39 @@ export function QuizSubmitButton({
             Enter your name, so that the result is stored.
           </DialogDescription>
         </DialogHeader>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-            <FormField
-              control={form.control}
-              name="username"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Name</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Enter your name" {...field} />
-                  </FormControl>
-                  <FormDescription>
-                    This is the name which will be displayed in the test result.
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </form>
-        </Form>
+        <QuizSubmitButton.Form onSubmit={onSubmit} form={form} />
         <DialogFooter>
           <Button type="submit">Submit</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
   );
-}
+};
+
+type FormProps = {
+  form: UseFormReturn<z.infer<typeof usernameSchema>>;
+  onSubmit(values: z.infer<typeof usernameSchema>): Promise<void>;
+};
+
+QuizSubmitButton.Form = ({ form, onSubmit }: FormProps) => (
+  <Form {...form}>
+    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+      <FormField
+        control={form.control}
+        name="username"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>Name</FormLabel>
+            <FormControl>
+              <Input placeholder="Enter your name" {...field} />
+            </FormControl>
+            <FormDescription>
+              This is the name which will be displayed in the test result.
+            </FormDescription>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+    </form>
+  </Form>
+);

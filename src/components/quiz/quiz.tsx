@@ -8,11 +8,9 @@ import { m } from "framer-motion";
 import { Bookmark, Star } from "lucide-react";
 
 import { useTheme } from "next-themes";
-import { useToast } from "../ui/use-toast";
-import { useRouter } from "next/navigation";
-import { cn, getErrorMessage } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 
-import { TQuestions, createResults } from "@/db";
+import { TQuestions } from "@/db";
 import { TAnswer } from "@/db/schema";
 
 function calculateInitial(questions: TQuestions) {
@@ -56,8 +54,6 @@ const Quiz = ({ questions, testID }: QuizProps) => {
     Array(questions.length).fill(false),
   );
   const [step, setStep] = React.useState(0);
-  const { toast } = useToast();
-  const router = useRouter();
 
   function handleBookmarked(index: number) {
     setIsBookmarked((prev) => {
@@ -74,32 +70,10 @@ const Quiz = ({ questions, testID }: QuizProps) => {
     });
   }
 
-  async function handleSubmit(name: string) {
-    try {
-      const res = await createResults(answers.current, name, testID);
-      // toast({
-      //   title: "Submitted results",
-      //   description: (
-      //     <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-      //       <code className="text-white">{JSON.stringify(res, null, 2)}</code>
-      //     </pre>
-      //   ),
-      // });
-      router.push("/results/" + res);
-    } catch (error) {
-      toast({
-        title: "Something went wrong",
-        description: `Failed to submit results: ${getErrorMessage(
-          error,
-        )}. Please, try again.`,
-      });
-    }
-  }
-
   return (
     <div className="flex min-h-screen w-[300px] flex-col items-center gap-4 overflow-x-hidden md:w-[600px]">
       <div className="mt-2 space-x-3">
-        <QuizSubmitButton handleSubmit={handleSubmit} />
+        <QuizSubmitButton testId={testID} answers={answers.current} />
         <Link
           href="/tests"
           className={cn(buttonVariants({ variant: "outline" }))}
@@ -163,35 +137,33 @@ const Quiz = ({ questions, testID }: QuizProps) => {
               answers={answers}
               question={question}
               handleGivenAnswer={handleGivenAnswer}
+              renderBookmark={() => (
+                <Button
+                  variant="ghost"
+                  tabIndex={0}
+                  className="absolute left-1.5 top-2 h-6 w-6 p-0"
+                  disabled={step !== index}
+                  onClick={() => {
+                    handleBookmarked(index);
+                  }}
+                >
+                  <Star
+                    size={20}
+                    className={cn(
+                      isBookmarked[index] ? "text-primary" : "text-background",
+                    )}
+                    strokeWidth={1}
+                    stroke={theme === "dark" ? "white" : "black"}
+                    fill="currentColor"
+                  />
+                </Button>
+              )}
             >
-              <Button
-                variant="ghost"
-                className="absolute left-1.5 top-2 h-6 w-6 p-0"
-                onClick={() => {
-                  handleBookmarked(index);
-                }}
-              >
-                <Star
-                  size={20}
-                  className={cn(
-                    isBookmarked[index] ? "text-primary" : "text-background",
-                  )}
-                  strokeWidth={1}
-                  stroke={theme === "dark" ? "white" : "black"}
-                  fill="currentColor"
-                />
-              </Button>
               {index === questions.length - 1 && (
-                // <Button
-                //   disabled={step !== questions.length - 1}
-                //   onClick={handleSubmit}
-                // >
-                //   Submit
-                // </Button>
-
                 <QuizSubmitButton
                   isDisabled={step !== questions.length - 1}
-                  handleSubmit={handleSubmit}
+                  testId={testID}
+                  answers={answers.current}
                 />
               )}
               {index !== questions.length - 1 && (
@@ -215,37 +187,6 @@ const Quiz = ({ questions, testID }: QuizProps) => {
             </QuizQuestion>
           </m.div>
         ))}
-        {/* <QuizMotion step={step} initOffset={questions.length}>
-          <QuizResults
-            correctAnswers={questions.reduce<Array<string | string[] | null>>(
-              (acc, question) => {
-                acc.push(question.answer);
-                return acc;
-              },
-              [],
-            )}
-            answers={answers}
-            // score={answers.reduce<number>((score, choice) => {
-            //   choice?.correctAnswer && score++;
-            //   return score;
-            // }, 0)}
-          >
-            <Button
-              disabled={step !== questions.length}
-              variant="outline"
-              onClick={() => setStep(0)}
-            >
-              Retake
-            </Button>
-            <Link
-              href="/tests"
-              tabIndex={step !== questions.length ? -1 : 0}
-              className={cn(buttonVariants({ variant: "default" }))}
-            >
-              New Test
-            </Link>
-          </QuizResults>
-        </QuizMotion> */}
       </div>
     </div>
   );
