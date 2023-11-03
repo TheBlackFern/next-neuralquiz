@@ -103,12 +103,14 @@ export const QuizSubmitButton = ({
   );
 };
 
+QuizSubmitButton.displayName = "QuizSubmitButton";
+
 type FormProps = {
   form: UseFormReturn<z.infer<typeof usernameSchema>>;
   onSubmit(values: z.infer<typeof usernameSchema>): Promise<void>;
 };
 
-QuizSubmitButton.Form = ({ form, onSubmit }: FormProps) => (
+const QuizSubmitButtonForm = ({ form, onSubmit }: FormProps) => (
   <Form {...form}>
     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
       <FormField
@@ -130,3 +132,6 @@ QuizSubmitButton.Form = ({ form, onSubmit }: FormProps) => (
     </form>
   </Form>
 );
+
+QuizSubmitButtonForm.displayName = "QuizSubmitButtonForm";
+QuizSubmitButton.Form = QuizSubmitButtonForm;
